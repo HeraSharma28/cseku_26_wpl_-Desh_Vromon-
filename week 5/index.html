@@ -1,0 +1,3159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desh Vromon — Bangladesh Tourism Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1A2420;
+    --ink-soft:#3C4A44;
+    --cream:#F3ECDC;
+    --cream-2:#FFFDF6;
+    --indigo:#17293A;
+    --indigo-2:#1F3A50;
+    --teal:#2F6E68;
+    --teal-light:#DCEAE6;
+    --marigold:#E3A400;
+    --marigold-dark:#B87F00;
+    --brick:#A94438;
+    --brick-light:#F3DAD5;
+    --line:#E3D9C2;
+    --line-dark:rgba(255,255,255,0.14);
+    --radius-s:10px;
+    --radius-m:16px;
+    --radius-l:26px;
+    --shadow:0 18px 40px -22px rgba(23,41,58,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    font-family:'Plus Jakarta Sans',sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'Fraunces',serif;font-weight:600;margin:0;letter-spacing:-0.01em;}
+  p{margin:0;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .icon{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+
+  /* ===== Global Site Navigation (single, shared across all pages) ===== */
+  .header-provider-link{
+    background:none;border:none;color:#9FB3AE;font-size:13.5px;font-weight:700;cursor:pointer;
+    white-space:nowrap;padding:8px 6px;font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .header-provider-link:hover{color:#F3ECDC;}
+  .auth-area{display:flex;align-items:center;gap:12px;}
+
+  /* Account / hamburger menu (logged-in) */
+  .account-menu{position:relative;}
+  .account-trigger{
+    display:inline-flex;align-items:center;gap:10px;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);
+    border-radius:999px;padding:6px 10px 6px 6px;cursor:pointer;color:#F3ECDC;
+    font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:12.5px;
+  }
+  .account-trigger:hover{background:rgba(255,255,255,.1);}
+  .account-avatar{
+    width:30px;height:30px;border-radius:50%;background:var(--marigold);color:#231900;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;
+  }
+  .account-trigger .hamburger-lines{display:flex;flex-direction:column;gap:3.5px;width:16px;}
+  .account-trigger .hamburger-lines span{display:block;height:1.8px;background:#F3ECDC;border-radius:2px;}
+  .account-dropdown{
+    display:none;position:absolute;right:0;top:calc(100% + 8px);min-width:240px;
+    background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 20px 50px -20px rgba(23,41,58,.45);padding:8px;z-index:200;
+  }
+  .account-dropdown.open{display:block;animation:fade .15s ease;}
+  .account-dropdown .ad-head{padding:10px 12px 8px;border-bottom:1px solid var(--line);margin-bottom:4px;}
+  .account-dropdown .ad-head .nm{font-weight:700;font-size:13.5px;}
+  .account-dropdown .ad-head .rl{font-size:11.5px;color:var(--ink-soft);text-transform:capitalize;}
+  .account-dropdown a, .account-dropdown button.ad-item{
+    display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+    padding:10px 12px;border:none;background:none;border-radius:10px;cursor:pointer;
+    font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);text-decoration:none;
+  }
+  .account-dropdown a:hover, .account-dropdown button.ad-item:hover{background:var(--cream);}
+  .account-dropdown .ad-danger{color:var(--brick)!important;}
+  .nav-link-auth{display:none;} /* shown only when role matches via JS */
+  body.role-provider .traveler-only{display:none!important;}
+  body.role-traveler .provider-only{display:none!important;}
+  body.role-guest .auth-only{display:none!important;}
+  body.role-provider .provider-only{display:initial;}
+
+  .mobile-menu-btn{
+    display:none;align-items:center;justify-content:center;width:40px;height:40px;
+    border:1px solid rgba(255,255,255,.18);border-radius:10px;background:rgba(255,255,255,.06);
+    color:#F3ECDC;cursor:pointer;flex-shrink:0;
+  }
+  .mobile-menu-btn .icon{width:19px;height:19px;}
+  .nav-links.mobile-open{
+    display:flex!important;flex-direction:column;gap:2px;
+    position:absolute;top:100%;left:0;right:0;
+    background:var(--indigo);padding:10px;
+    border-top:1px solid var(--line-dark);
+    box-shadow:0 24px 50px -24px rgba(0,0,0,.6);
+  }
+  .nav-links.mobile-open a{
+    padding:12px 14px;border-radius:9px;border-bottom:none;
+  }
+  .nav-links.mobile-open a:hover,.nav-links.mobile-open a.curr{background:rgba(255,255,255,.08);}
+
+  .page-content{width:100%;max-width:none;margin:0;}
+  .content-inner{width:100%;max-width:1280px;margin:0 auto;}
+  .section,.hero,.footer,.explore-main,.book-list,.dash-main,.itin-main,.planner-form{box-sizing:border-box;}
+  /* fluid sections: use full viewport, pad consistently on all devices */
+  .section{padding-left:clamp(16px,4vw,48px);padding-right:clamp(16px,4vw,48px);}
+  .hero{padding-left:clamp(16px,4vw,48px);padding-right:clamp(16px,4vw,48px);}
+  .footer{padding-left:clamp(16px,4vw,48px);padding-right:clamp(16px,4vw,48px);}
+  .nav{padding-left:clamp(14px,3.5vw,44px);padding-right:clamp(14px,3.5vw,44px);}
+  .cta-band{margin-left:clamp(16px,4vw,48px);margin-right:clamp(16px,4vw,48px);}
+  .app-shell,.planner-shell,.book-shell,.dash-shell{width:100%;}
+  .explore-main,.book-list,.book-summary,.itin-main,.dash-main,.planner-form{padding-left:clamp(16px,3vw,30px);padding-right:clamp(16px,3vw,30px);}
+  .frame-wrap{display:none;}
+  .frame-wrap.active{display:block;animation:fade .3s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .frame{background:var(--cream);overflow:hidden;}
+
+  /* ===== shared UI atoms ===== */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;
+    padding:12px 20px;border-radius:11px;border:none;cursor:pointer;text-decoration:none;
+    transition:.15s;letter-spacing:0.01em;
+  }
+  .btn-primary{background:var(--marigold);color:#231900;box-shadow:0 10px 22px -10px rgba(227,164,0,0.6);}
+  .btn-primary:hover{background:var(--marigold-dark);}
+  .btn-dark{background:var(--indigo);color:#F3ECDC;}
+  .btn-outline{background:transparent;border:1.5px solid rgba(0,0,0,0.15);color:var(--ink);}
+  .btn-outline-light{background:transparent;border:1.5px solid rgba(255,255,255,0.35);color:#F3ECDC;}
+  .btn-ghost{background:rgba(0,0,0,0.05);color:var(--ink);}
+  .btn-sm{padding:8px 14px;font-size:12.5px;border-radius:8px;}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;
+    font-size:11.5px;font-weight:700;letter-spacing:0.02em;text-transform:uppercase;
+  }
+  .pill-teal{background:var(--teal-light);color:var(--teal);}
+  .pill-brick{background:var(--brick-light);color:var(--brick);}
+  .pill-marigold{background:#FBEACB;color:#8A6300;}
+  .card{background:var(--cream-2);border:1px solid var(--line);border-radius:var(--radius-m);}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.09em;text-transform:uppercase;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .stars{display:flex;align-items:center;gap:3px;color:var(--marigold-dark);font-size:12.5px;font-weight:700;}
+  ::selection{background:var(--marigold);color:#231900;}
+
+  /* ===================== GLOBAL SITE HEADER ===================== */
+  .nav{
+    position:sticky;top:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 44px;background:var(--indigo);color:#EFE8D6;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .nav-left{display:flex;align-items:center;gap:40px;}
+  .brand{display:flex;align-items:center;gap:9px;cursor:pointer;}
+  .brand-mark{
+    width:32px;height:32px;border-radius:9px;background:var(--marigold);
+    display:flex;align-items:center;justify-content:center;color:#241900;flex-shrink:0;
+  }
+  .brand-word{font-family:'Fraunces',serif;font-size:19px;font-weight:600;white-space:nowrap;}
+  .brand-word em{font-style:normal;color:var(--marigold);}
+  .nav-links{display:flex;gap:26px;font-size:14px;font-weight:600;color:#B9C7C2;}
+  .nav-links a{color:inherit;cursor:pointer;padding:6px 2px;border-bottom:2px solid transparent;transition:.15s;}
+  .nav-links a:hover{color:#F3ECDC;}
+  .nav-links a.curr{color:#F3ECDC;border-bottom-color:var(--marigold);}
+  .nav-right{display:flex;align-items:center;gap:16px;}
+
+  .hero{
+    position:relative;background:linear-gradient(175deg,#17293A 0%,#1B3345 55%,#22405A 100%);
+    padding:70px 44px 0;color:#F3ECDC;overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;opacity:.10;
+    background-image:radial-gradient(circle at 18% 30%, #fff 0, transparent 1.4px),
+      radial-gradient(circle at 62% 65%, #fff 0, transparent 1.4px),
+      radial-gradient(circle at 85% 20%, #fff 0, transparent 1.4px);
+    background-size:120px 120px;
+  }
+  .hero-grid{position:relative;display:grid;grid-template-columns:1.15fr 0.85fr;gap:50px;align-items:center;}
+  .hero-eyebrow{color:#8FCFC0;}
+  .hero h1{font-size:47px;line-height:1.08;margin:18px 0 20px;max-width:590px;}
+  .hero h1 .hl{color:var(--marigold);}
+  .hero-sub{font-size:16px;line-height:1.6;color:#C7D6D0;max-width:480px;margin-bottom:30px;}
+  .search-card{
+    background:#F3ECDC;border-radius:18px;padding:18px;display:grid;
+    grid-template-columns:1.3fr 1fr 1fr auto;gap:0;box-shadow:0 30px 60px -25px rgba(0,0,0,0.55);
+  }
+  .search-field{padding:6px 18px;border-right:1px solid var(--line);}
+  .search-field:last-of-type{border-right:none;}
+  .search-field label{display:block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8B7F63;margin-bottom:4px;}
+  .search-field .val{font-weight:700;font-size:14.5px;color:var(--ink);display:flex;align-items:center;gap:7px;}
+  .search-field .sub{font-size:12px;color:var(--ink-soft);}
+  .search-btn{background:var(--marigold);border:none;border-radius:12px;padding:0 20px;display:flex;align-items:center;gap:8px;color:#241900;font-weight:800;font-size:14px;cursor:pointer;}
+
+  /* seasonal wheel */
+  .wheel-wrap{position:relative;display:flex;flex-direction:column;align-items:center;padding-bottom:36px;}
+  .wheel{position:relative;width:300px;height:300px;}
+  .wheel svg{width:100%;height:100%;}
+  .wheel-center{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:128px;height:128px;border-radius:50%;background:#0F1F2C;border:1px solid rgba(255,255,255,0.12);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;
+  }
+  .wheel-center .k{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;color:#7FB8AA;text-transform:uppercase;}
+  .wheel-center .v{font-family:'Fraunces',serif;font-size:19px;color:#F3ECDC;}
+  .season-tag{
+    position:absolute;transform:translate(-50%,-50%);
+    width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);color:#DCE7E2;font-size:11px;font-weight:700;
+  }
+  .season-tag.on{background:var(--marigold);color:#241900;border-color:var(--marigold);}
+  .season-callout{
+    margin-top:-6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);
+    border-radius:14px;padding:13px 16px;font-size:12.5px;color:#DCE7E2;max-width:280px;text-align:center;
+  }
+  .season-callout b{color:#F3ECDC;}
+
+  .stat-strip{
+    position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+    margin-top:56px;border-top:1px solid var(--line-dark);
+  }
+  .stat-strip .s{padding:22px 44px;border-right:1px solid var(--line-dark);}
+  .stat-strip .s:last-child{border-right:none;}
+  .stat-strip .num{font-family:'Fraunces',serif;font-size:28px;color:#F3ECDC;}
+  .stat-strip .lbl{font-size:12px;color:#8FA39D;margin-top:2px;}
+
+  .section{padding:64px 44px;}
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:30px;}
+  .section-head .eyebrow{color:var(--teal);}
+  .section-head h2{font-size:30px;margin-top:8px;max-width:460px;}
+
+  .dest-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .dest-card{border-radius:var(--radius-m);overflow:hidden;border:1px solid var(--line);background:var(--cream-2);}
+  .dest-media{height:130px;display:flex;align-items:center;justify-content:center;position:relative;}
+  .dest-media .icon{width:34px;height:34px;color:rgba(255,255,255,0.9);}
+  .dest-media .pill{position:absolute;top:10px;left:10px;}
+  .dest-body{padding:15px 16px 17px;}
+  .dest-body h4{font-size:15.5px;margin-bottom:3px;}
+  .dest-body .loc{font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:5px;margin-bottom:10px;}
+  .dest-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
+  .dest-foot .price{font-size:13px;color:var(--ink-soft);}
+  .dest-foot .price b{color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:13.5px;}
+
+  .m1{background:linear-gradient(135deg,#2F6E68,#1E4B47);}
+  .m2{background:linear-gradient(135deg,#22405A,#17293A);}
+  .m3{background:linear-gradient(135deg,#A94438,#7C2E24);}
+  .m4{background:linear-gradient(135deg,#E3A400,#B87F00);}
+  .m5{background:linear-gradient(135deg,#3A6B4E,#22432E);}
+  .m6{background:linear-gradient(135deg,#5B7CA0,#2E4A66);}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .step{padding:26px;border-radius:var(--radius-m);background:var(--cream-2);border:1px solid var(--line);position:relative;}
+  .step .idx{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--teal);margin-bottom:14px;}
+  .step h4{font-size:17px;margin-bottom:8px;}
+  .step p{font-size:13.5px;color:var(--ink-soft);line-height:1.55;}
+
+  .cta-band{
+    margin:0 44px;border-radius:24px;background:linear-gradient(120deg,var(--brick),#7C2E24);
+    color:#F6E7E2;padding:44px 48px;display:flex;align-items:center;justify-content:space-between;gap:30px;
+  }
+  .cta-band h3{font-size:25px;max-width:420px;color:#FBEEEA;}
+  .cta-band p{font-size:13.5px;color:#EAC9C2;margin-top:8px;max-width:420px;}
+
+  .footer{background:var(--indigo);color:#9FB3AE;padding:50px 44px 26px;}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px;margin-bottom:36px;}
+  .footer h5{color:#EFE8D6;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;margin-bottom:14px;}
+  .footer a{display:block;color:#8FA39D;font-size:13px;text-decoration:none;margin-bottom:9px;}
+  .footer-bottom{border-top:1px solid var(--line-dark);padding-top:18px;font-size:12px;display:flex;justify-content:space-between;}
+
+  /* ===================== SCREEN 2 — EXPLORE ===================== */
+  .app-shell{display:grid;grid-template-columns:250px 1fr;min-height:640px;}
+  .filter-side{background:var(--cream-2);border-right:1px solid var(--line);padding:24px 20px;}
+  .filter-side h5{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#8B7F63;margin:20px 0 10px;}
+  .filter-side h5:first-child{margin-top:0;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:7px;}
+  .chip{padding:6px 12px;border-radius:99px;border:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--cream-2);}
+  .chip.on{background:var(--teal);border-color:var(--teal);color:#fff;}
+  .check-row{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink-soft);margin-bottom:9px;}
+  .check-row .box{width:16px;height:16px;border-radius:5px;border:1.5px solid #C9BE9E;flex-shrink:0;}
+  .check-row .box.on{background:var(--teal);border-color:var(--teal);position:relative;}
+  .range{height:5px;border-radius:99px;background:linear-gradient(90deg,var(--teal) 40%,var(--line) 40%);margin:14px 0 6px;position:relative;}
+  .range .knob{position:absolute;left:40%;top:50%;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;background:#fff;border:3px solid var(--teal);}
+
+  .explore-main{padding:26px 30px;}
+  .explore-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+  .search-bar{display:flex;align-items:center;gap:9px;background:var(--cream-2);border:1px solid var(--line);border-radius:11px;padding:11px 16px;color:var(--ink-soft);font-size:13.5px;flex:1;max-width:380px;}
+  .sort-box{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);}
+  .explore-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .xcard{border-radius:var(--radius-m);overflow:hidden;background:var(--cream-2);border:1px solid var(--line);}
+  .xcard .media{height:120px;position:relative;display:flex;align-items:flex-end;padding:10px;}
+  .xcard .media .heart{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;}
+  .xcard .media .icon{width:30px;height:30px;color:rgba(255,255,255,.9);}
+  .xcard .body{padding:14px 15px 16px;}
+  .xcard .row1{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;}
+  .xcard h4{font-size:14.5px;}
+  .pagination{display:flex;justify-content:center;gap:8px;margin-top:28px;}
+  .pg{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--ink-soft);border:1px solid var(--line);}
+  .pg.on{background:var(--indigo);color:#F3ECDC;border-color:var(--indigo);}
+
+  /* ===================== SCREEN 3 — TRIP PLANNER ===================== */
+  .planner-shell{display:grid;grid-template-columns:360px 1fr;}
+  .planner-form{background:var(--indigo);color:#F3ECDC;padding:30px 28px;}
+  .planner-form h3{font-size:21px;margin-bottom:6px;}
+  .planner-form>p{font-size:13px;color:#9FB3AE;margin-bottom:24px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:#8FA39D;margin-bottom:7px;font-weight:700;}
+  .field .box{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.16);border-radius:10px;padding:11px 14px;font-size:13.5px;display:flex;align-items:center;justify-content:space-between;}
+  .field .two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .style-chip{padding:8px 13px;border-radius:9px;border:1px solid rgba(255,255,255,0.18);font-size:12.5px;font-weight:600;color:#DCE7E2;}
+  .style-chip.on{background:var(--marigold);color:#241900;border-color:var(--marigold);}
+
+  .itin-main{padding:28px 32px;}
+  .itin-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+  .day-tabs{display:flex;gap:8px;}
+  .day-tab{padding:8px 16px;border-radius:9px;font-size:13px;font-weight:700;color:var(--ink-soft);border:1px solid var(--line);}
+  .day-tab.on{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .itin-layout{display:grid;grid-template-columns:1fr 300px;gap:24px;}
+  .tl{position:relative;padding-left:28px;}
+  .tl::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:var(--line);}
+  .tl-item{position:relative;padding-bottom:22px;}
+  .tl-item::before{content:"";position:absolute;left:-28px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--teal);border:3px solid var(--cream);}
+  .tl-time{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--teal);font-weight:600;margin-bottom:6px;}
+  .tl-card{background:var(--cream-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+  .tl-card h4{font-size:14.5px;margin-bottom:3px;}
+  .tl-card p{font-size:12.5px;color:var(--ink-soft);}
+  .tl-icon{width:38px;height:38px;border-radius:10px;background:var(--teal-light);color:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+  .budget-card{background:var(--cream-2);border:1px solid var(--line);border-radius:var(--radius-m);padding:20px;position:sticky;top:80px;}
+  .budget-card h4{font-size:15px;margin-bottom:16px;}
+  .bar-row{margin-bottom:13px;}
+  .bar-row .lbl-row{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px;}
+  .bar-row .lbl-row span:last-child{font-family:'IBM Plex Mono',monospace;font-weight:600;}
+  .bar-track{height:7px;border-radius:99px;background:var(--line);overflow:hidden;}
+  .bar-fill{height:100%;border-radius:99px;}
+  .budget-total{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:center;}
+  .budget-total .tot{font-family:'Fraunces',serif;font-size:22px;}
+  .budget-total .cap{font-size:11.5px;color:var(--ink-soft);}
+
+  /* ===================== SCREEN 4 — BOOKING ===================== */
+  .book-shell{display:grid;grid-template-columns:1fr 340px;gap:0;}
+  .book-list{padding:28px 30px;border-right:1px solid var(--line);}
+  .hotel-card{display:grid;grid-template-columns:150px 1fr;gap:16px;background:var(--cream-2);border:1px solid var(--line);border-radius:var(--radius-m);overflow:hidden;margin-bottom:16px;}
+  .hotel-card.sel{outline:2px solid var(--marigold);}
+  .hotel-media{position:relative;display:flex;align-items:center;justify-content:center;}
+  .hotel-body{padding:15px 16px 15px 0;}
+  .hotel-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .amenities{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0;}
+  .amenity{font-size:11px;color:var(--ink-soft);background:var(--cream);border:1px solid var(--line);padding:4px 9px;border-radius:7px;}
+  .hotel-foot{display:flex;justify-content:space-between;align-items:flex-end;}
+  .hotel-foot .price{font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--ink);}
+  .hotel-foot .per{font-size:11px;color:var(--ink-soft);}
+
+  .book-summary{padding:28px 24px;background:var(--cream-2);}
+  .book-summary h4{font-size:16px;margin-bottom:16px;}
+  .sum-row{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-soft);margin-bottom:10px;}
+  .sum-row b{color:var(--ink);font-weight:700;}
+  .sum-total{display:flex;justify-content:space-between;padding-top:14px;margin-top:6px;border-top:1px dashed var(--line);font-family:'Fraunces',serif;font-size:19px;}
+  .pay-row{display:flex;gap:8px;margin:16px 0;}
+  .pay-chip{flex:1;text-align:center;padding:10px 6px;border:1px solid var(--line);border-radius:9px;font-size:11px;font-weight:700;color:var(--ink-soft);cursor:pointer;transition:.15s;}
+  .pay-chip.on{background:var(--teal);border-color:var(--teal);color:#fff;}
+
+  /* ===================== SCREEN 5/6 — DASHBOARDS ===================== */
+  .dash-shell{display:grid;grid-template-columns:230px 1fr;min-height:640px;}
+  .dash-side{background:var(--indigo);color:#DCE7E2;padding:24px 16px;}
+  .dash-side .who{display:flex;align-items:center;gap:10px;padding:10px 10px 22px;border-bottom:1px solid var(--line-dark);margin-bottom:18px;}
+  .dash-side .who .av{width:36px;height:36px;border-radius:10px;background:var(--marigold);display:flex;align-items:center;justify-content:center;color:#241900;font-weight:800;font-family:'Fraunces',serif;}
+  .dash-side .who .nm{font-size:13.5px;font-weight:700;color:#F3ECDC;}
+  .dash-side .who .rl{font-size:11px;color:#8FA39D;}
+  .dnav{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;font-size:13.5px;font-weight:600;color:#AFC1BC;margin-bottom:3px;}
+  .dnav.on{background:rgba(255,255,255,0.09);color:#F3ECDC;}
+  .dash-main{padding:26px 30px;}
+  .dash-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;}
+  .dash-head h2{font-size:23px;}
+  .dash-head p{font-size:13px;color:var(--ink-soft);margin-top:4px;}
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+  .statc{background:var(--cream-2);border:1px solid var(--line);border-radius:var(--radius-m);padding:18px;}
+  .statc .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+  .statc .ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;}
+  .statc .num{font-family:'Fraunces',serif;font-size:25px;}
+  .statc .lbl{font-size:12px;color:var(--ink-soft);margin-top:3px;}
+  .statc .delta{font-size:11px;font-weight:700;}
+
+  .dash-2col{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;}
+  .panel{background:var(--cream-2);border:1px solid var(--line);border-radius:var(--radius-m);padding:20px;margin-bottom:20px;}
+  .panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+  .panel-head h4{font-size:15px;}
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#8B7F63;padding-bottom:10px;font-weight:700;}
+  td{padding:11px 0;border-top:1px solid var(--line);font-size:13px;}
+  .status{padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;}
+  .status.ok{background:#DCEAE6;color:var(--teal);}
+  .status.pend{background:#FBEACB;color:#8A6300;}
+  .status.no{background:#F3DAD5;color:var(--brick);}
+  .bars{display:flex;align-items:flex-end;gap:10px;height:120px;margin-top:6px;}
+  .bars .b{flex:1;border-radius:6px 6px 0 0;background:var(--teal);position:relative;}
+  .bars .b span{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:10.5px;color:var(--ink-soft);}
+  .trip-hero{border-radius:14px;overflow:hidden;position:relative;padding:20px;color:#fff;background:linear-gradient(135deg,#2F6E68,#17293A);}
+  .trip-hero .cd{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;color:#B8D8CF;margin-bottom:6px;}
+  .trip-hero h3{font-size:19px;color:#fff;margin-bottom:8px;}
+  .progress-track{height:6px;border-radius:99px;background:rgba(255,255,255,.25);margin-top:14px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--marigold);border-radius:99px;}
+
+  @media (max-width:1100px){
+    .hero-grid,.dest-grid,.explore-grid,.stat-grid{grid-template-columns:repeat(2,1fr)!important;}
+    .hero-grid{gap:30px}
+    .hero h1{font-size:42px}
+    .dash-main{padding:24px}
+  }
+
+/* WEEK 3–4 INTERACTION LAYER */
+.toast{position:fixed;right:22px;bottom:22px;z-index:200;background:#17293A;color:#F3ECDC;padding:13px 18px;border-radius:11px;box-shadow:0 18px 40px -18px rgba(0,0,0,.6);font-size:13px;font-weight:600;opacity:0;transform:translateY(15px);pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translateY(0)}
+.modal-backdrop{position:fixed;inset:0;z-index:150;background:rgba(10,18,25,.65);display:none;align-items:center;justify-content:center;padding:20px}.modal-backdrop.open{display:flex}.auth-modal{width:min(440px,100%);background:var(--cream);border-radius:20px;padding:28px;box-shadow:0 30px 90px -30px rgba(0,0,0,.7)}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modal-head h3{font-size:23px}.close-modal{border:none;background:transparent;font-size:24px;cursor:pointer;color:var(--ink-soft)}.form-input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--cream-2);font:inherit;color:var(--ink);margin-top:7px}.form-group{margin-bottom:14px}.form-group label{font-size:12px;font-weight:700;color:var(--ink-soft)}.form-switch{font-size:12px;color:var(--teal);font-weight:700;cursor:pointer;background:none;border:none;padding:0}.clickable{cursor:pointer}
+
+  .pw-wrap{position:relative;display:flex;align-items:center}
+  .pw-wrap .form-input{padding-right:44px;width:100%}
+  .pw-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:none;background:transparent;cursor:pointer;color:var(--ink-soft);padding:6px;display:flex;align-items:center;justify-content:center;border-radius:8px}
+  .pw-toggle:hover{color:var(--teal);background:rgba(47,110,104,.08)}
+  .pw-toggle .icon{width:18px;height:18px}
+  .footer a{cursor:pointer}
+  .footer a:hover{color:#F3ECDC}
+  .cta-band .btn{cursor:pointer}
+  .chip{cursor:pointer;user-select:none}
+  .check-row{cursor:pointer;user-select:none}
+  .style-chip{cursor:pointer;user-select:none}
+.dest-card.fav,.xcard.fav{outline:2px solid var(--brick)}
+.xcard.fav .heart svg{fill:var(--brick)}
+
+/* ===== Shared responsive polish ===== */
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{overflow-x:hidden}
+button,a{touch-action:manipulation}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid rgba(227,164,0,.55);outline-offset:2px}
+.search-card{min-width:0}
+.search-field{min-width:0}
+.search-field .val,.search-field .sub{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dest-card,.xcard,.panel,.statc,.step,.hotel-card{min-width:0}
+.explore-main,.itin-main,.book-list,.book-summary,.dash-main{min-width:0}
+.table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-wrap table{min-width:600px}
+.mobile-dash-nav{
+  display:none;background:var(--indigo);padding:10px 12px;border-top:1px solid var(--line-dark);
+}
+.mobile-dash-nav select{
+  width:100%;padding:11px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.18);
+  background:#1F3A50;color:#F3ECDC;font:600 13px 'Plus Jakarta Sans',sans-serif;
+}
+.dash-side .dnav{cursor:pointer}
+.dash-side .dnav:hover{background:rgba(255,255,255,.07);color:#F3ECDC}
+.statc .delta{margin-top:7px}
+.dashboard-empty{
+  padding:28px;text-align:center;border:1px dashed var(--line);border-radius:12px;
+  color:var(--ink-soft);font-size:13px;background:rgba(255,255,255,.35)
+}
+
+/* Collapse the primary navigation into a menu button before it ever runs out of room —
+   this is what fixes the links wrapping onto a second line. */
+@media (max-width:1280px){
+  .nav-links{display:none}
+  .mobile-menu-btn{display:flex}
+  .nav-right{gap:10px}
+}
+
+@media (max-width:760px){
+  .nav{padding:14px 16px;align-items:center}
+  .nav-left{gap:0}
+  .brand-word{font-size:17px}
+  .brand-mark{width:30px;height:30px}
+  .nav-right{gap:7px}
+  .nav-right .btn{padding:8px 11px;font-size:11.5px}
+
+  .hero{padding:40px 18px 0}
+  .hero-grid{grid-template-columns:1fr!important;gap:30px}
+  .hero h1{font-size:36px;line-height:1.1}
+  .hero-sub{font-size:14px}
+  .search-card{grid-template-columns:1fr!important;padding:12px}
+  .search-field{padding:10px 8px;border-right:0;border-bottom:1px solid var(--line)}
+  .search-field:last-of-type{border-bottom:1px solid var(--line)}
+  .search-btn{min-height:46px;justify-content:center;padding:12px}
+  .wheel{width:min(270px,82vw);height:min(270px,82vw)}
+  .season-tag{width:50px;height:50px;font-size:10px}
+  .season-callout{max-width:100%;margin-top:0}
+  .stat-strip{grid-template-columns:repeat(2,1fr);margin-top:35px}
+  .stat-strip .s{padding:16px 18px}
+  .stat-strip .s:nth-child(2){border-right:none}
+  .stat-strip .s:nth-child(-n+2){border-bottom:1px solid var(--line-dark)}
+  .stat-strip .num{font-size:23px}
+  .section{padding:40px 18px}
+  .section-head{display:block}
+  .section-head .btn{margin-top:14px}
+  .dest-grid,.explore-grid,.steps{grid-template-columns:1fr!important}
+  .dest-media{height:145px}
+  .cta-band{margin:0 18px;padding:28px 24px}
+  .footer{padding:40px 20px 24px}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:25px}
+  .footer-bottom{display:block}
+  .footer-bottom span{display:block;margin-top:7px}
+
+  .app-shell,.planner-shell,.book-shell,.dash-shell{grid-template-columns:1fr!important}
+  .filter-side{padding:20px}
+  .explore-main{padding:20px}
+  .explore-top{display:block}
+  .search-bar{max-width:none;width:100%}
+  .sort-box{margin-top:12px}
+  .planner-form{padding:24px 20px}
+  .field .two{grid-template-columns:1fr}
+  .itin-main{padding:22px 18px}
+  .itin-top{display:block}
+  .day-tabs{overflow-x:auto;padding-bottom:4px;margin-top:12px}
+  .day-tab{white-space:nowrap}
+  .itin-layout,.dash-2col{grid-template-columns:1fr}
+  .budget-card{position:static}
+  .hotel-card{grid-template-columns:1fr}
+  .hotel-media{min-height:130px}
+  .hotel-body{padding:15px}
+  .book-list{padding:20px 18px}
+  .book-summary{padding:22px 18px}
+  .dash-side{display:none}
+  .mobile-dash-nav{display:block}
+  .dash-main{padding:20px 16px}
+  .dash-head{display:block}
+  .dash-head .btn{margin-top:14px;width:100%}
+  .stat-grid{grid-template-columns:1fr 1fr!important;gap:10px}
+  .statc{padding:14px}
+  .statc .num{font-size:21px}
+  .statc .num.mono{font-size:17px}
+  .panel{padding:16px}
+  .trip-hero{padding:17px}
+  .trip-hero h3{font-size:17px}
+  .table-wrap{margin:0 -2px;width:calc(100% + 4px)}
+}
+
+@media (max-width:430px){
+  .hero h1{font-size:31px}
+  .stat-grid{grid-template-columns:1fr!important}
+  .stat-strip .s{padding:14px}
+  .footer-grid{grid-template-columns:1fr}
+  .dash-head h2{font-size:21px}
+}
+
+</style>
+</head>
+<body>
+
+<!-- ===================== SITE HEADER (real navigation, shared by every page) ===================== -->
+<nav class="nav">
+  <div class="nav-left">
+    <div class="brand" data-tab-link="t1" role="button" tabindex="0" aria-label="Desh Vromon — go to home">
+      <div class="brand-mark"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.6 7-12a7 7 0 10-14 0c0 5.4 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+      <div class="brand-word">Desh <em>Vromon</em></div>
+    </div>
+    <div class="nav-links" id="main-nav-links">
+      <!-- filled by renderNav() -->
+    </div>
+  </div>
+  <div class="nav-right">
+    <button class="mobile-menu-btn" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <div class="auth-area" id="auth-area">
+      <button class="btn btn-outline-light btn-sm login-btn" type="button">Log in</button>
+      <button class="btn btn-primary btn-sm signup-btn" type="button">Sign up</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-content">
+
+<!-- ============================================================ -->
+<!-- SCREEN 01 — LANDING                                            -->
+<!-- ============================================================ -->
+<div class="frame-wrap active" id="t1">
+  <div class="frame">
+
+    <header class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow hero-eyebrow"><svg class="icon" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg> সিজন অনুযায়ী ভ্রমণ পরিকল্পনা</div>
+          <h1>Discover Bangladesh, <span class="hl">one season</span> at a time.</h1>
+          <p class="hero-sub">From the mangroves of the Sundarbans to the tea hills of Sylhet — explore destinations, plan a personalised itinerary, and book your stay, all in one platform.</p>
+
+          <div class="search-card">
+            <div class="search-field">
+              <label>Destination</label>
+              <div class="val"><svg class="icon" style="width:15px;height:15px;color:#8B7F63" viewBox="0 0 24 24"><path d="M12 21s7-6.6 7-12a7 7 0 10-14 0c0 5.4 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg> Sajek Valley</div>
+              <div class="sub">Rangamati, Chittagong Hill Tracts</div>
+            </div>
+            <div class="search-field">
+              <label>When</label>
+              <div class="val">Nov 14 – 17</div>
+              <div class="sub">3 days · Winter (শীত)</div>
+            </div>
+            <div class="search-field">
+              <label>Travelers</label>
+              <div class="val">2 Adults</div>
+              <div class="sub">Budget: ৳15,000</div>
+            </div>
+            <button class="search-btn"><svg class="icon" style="width:15px;height:15px" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg> Search</button>
+          </div>
+        </div>
+
+        <div class="wheel-wrap">
+          <div class="wheel">
+            <svg viewBox="0 0 300 300">
+              <circle cx="150" cy="150" r="128" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+              <circle cx="150" cy="150" r="95" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="2 6"/>
+            </svg>
+            <div class="season-tag" style="top:12px;left:150px;">গ্রীষ্ম</div>
+            <div class="season-tag" style="top:70px;left:250px;">বর্ষা</div>
+            <div class="season-tag" style="top:230px;left:250px;">শরৎ</div>
+            <div class="season-tag on" style="top:288px;left:150px;">শীত</div>
+            <div class="season-tag" style="top:230px;left:50px;">হেমন্ত</div>
+            <div class="season-tag" style="top:70px;left:50px;">বসন্ত</div>
+            <div class="wheel-center">
+              <div class="k">Now Trending</div>
+              <div class="v">Winter</div>
+              <div class="k" style="color:#DCE7E2">Poush – Magh</div>
+            </div>
+          </div>
+          <div class="season-callout"><b>Best this season:</b> Sundarbans, Sajek Valley &amp; Cox's Bazar — clear skies, cool weather, peak tourist season.</div>
+        </div>
+      </div>
+
+      <div class="stat-strip">
+        <div class="s"><div class="num mono">64</div><div class="lbl">Districts covered</div></div>
+        <div class="s"><div class="num mono">380+</div><div class="lbl">Destinations listed</div></div>
+        <div class="s"><div class="num mono">1,240</div><div class="lbl">Verified service providers</div></div>
+        <div class="s"><div class="num mono">96k</div><div class="lbl">Trips planned</div></div>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">✦ Featured</div>
+          <h2>Handpicked for this season</h2>
+        </div>
+        <button class="btn btn-outline btn-sm" type="button" data-tab-link="t2">View all destinations →</button>
+      </div>
+      <div class="dest-grid">
+        <div class="dest-card">
+          <div class="dest-media m1"><span class="pill pill-teal">Winter</span><svg class="icon" viewBox="0 0 24 24"><path d="M3 18c2-3 4-3 6 0s4 3 6 0 4-3 6 0M4 12l4-8 4 8 4-8 4 8"/></svg></div>
+          <div class="dest-body">
+            <h4>Sundarbans</h4>
+            <div class="loc"><svg class="icon" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="M12 21s7-6.6 7-12a7 7 0 10-14 0c0 5.4 7 12 7 12z"/></svg> Khulna Division</div>
+            <div class="stars">★★★★★ <span style="color:var(--ink-soft);font-weight:400">4.8 (2,140)</span></div>
+            <div class="dest-foot"><span class="price">From <b>৳4,500</b></span><button class="btn btn-ghost btn-sm">Explore</button></div>
+          </div>
+        </div>
+        <div class="dest-card">
+          <div class="dest-media m3"><span class="pill pill-marigold">Popular</span><svg class="icon" viewBox="0 0 24 24"><path d="M4 20l4-8 3 4 3-6 6 10H4z"/></svg></div>
+          <div class="dest-body">
+            <h4>Cox's Bazar</h4>
+            <div class="loc"><svg class="icon" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="M12 21s7-6.6 7-12a7 7 0 10-14 0c0 5.4 7 12 7 12z"/></svg> Chittagong Division</div>
+            <div class="stars">★★★★★ <span style="color:var(--ink-soft);font-weight:400">4.6 (5,830)</span></div>
+            <div class="dest-foot"><span class="price">From <b>৳6,200</b></span><button class="btn btn-ghost btn-sm">Explore</button></div>
+          </div>
+        </div>
+        <div class="dest-card">
+          <div class="dest-media m5"><span class="pill pill-teal">Nature</span><svg class="icon" viewBox="0 0 24 24"><path d="M12 3c3 3 3 7 0 10-3-3-3-7 0-10zM12 13v8M8 21h8"/></svg></div>
+          <div class="dest-body">
+            <h4>Srimangal Tea Gardens</h4>
+            <div class="loc"><svg class="icon" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="M12 21s7-6.6 7-12a7 7 0 10-14 0c0 5.4 7 12 7 12z"/></svg> Sylhet Division</div>
+            <div class="stars">★★★★★ <span style="color:var(--ink-soft);font-weight:400">4.7 (1,390)</span></div>
+            <div class="dest-foot"><span class="price">From <b>৳3,800</b></span><button class="btn btn-ghost btn-sm">Explore</button></div>
+          </div>
+        </div>
+        <div class="dest-card">
+          <div class="dest-media m2"><span class="pill pill-brick">Hill Tracts</span><svg class="icon" viewBox="0 0 24 24"><path d="M2 20l6-11 4 7 3-5 7 9H2z"/></svg></div>
+          <div class="dest-body">
+            <h4>Sajek Valley</h4>
+            <div class="loc"><svg class="icon" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="M12 21s7-6.6 7-12a7 7 0 10-14 0c0 5.4 7 12 7 12z"/></svg> Rangamati</div>
+            <div class="stars">★★★★★ <span style="color:var(--ink-soft);font-weight:400">4.9 (960)</span></div>
+            <div class="dest-foot"><span class="price">From <b>৳5,100</b></span><button class="btn btn-ghost btn-sm">Explore</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0;">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow" style="color:var(--brick)">◈ Process</div>
+          <h2>Plan a trip in three steps</h2>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step" data-tab-link="t2" style="cursor:pointer" role="button" tabindex="0">
+          <div class="idx">01 / Explore</div>
+          <h4>Discover by season</h4>
+          <p>Browse destinations filtered by season, budget and activity type, with weather-aware recommendations.</p>
+        </div>
+        <div class="step" data-tab-link="t3" class="traveler-only" style="cursor:pointer" role="button" tabindex="0">
+          <div class="idx">02 / Plan</div>
+          <h4>Build your itinerary</h4>
+          <p>Set your dates, budget and travel style — Desh Vromon generates a day-by-day plan you can customise.</p>
+        </div>
+        <div class="step" data-tab-link="t4" style="cursor:pointer" role="button" tabindex="0">
+          <div class="idx">03 / Book</div>
+          <h4>Confirm &amp; travel</h4>
+          <p>Reserve accommodation, transport and activities from verified providers, and track everything from your dashboard.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta-band">
+      <div>
+        <h3>Run a hotel, homestay or tour service?</h3>
+        <p>List your business on Desh Vromon, manage availability and pricing, and reach travelers planning trips across Bangladesh.</p>
+      </div>
+      <button class="btn btn-primary" id="register-provider-cta" type="button">Register as a Provider →</button>
+    </div>
+
+    <footer class="footer" style="margin-top:56px;">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom:12px;">
+            <div class="brand-mark"><svg class="icon" style="width:17px;height:17px" viewBox="0 0 24 24"><path d="M3 20l6-16 6 16M7 12h4M15 10l4 10"/></svg></div>
+            <div class="brand-word" style="color:#F3ECDC">Desh <em>Vromon</em></div>
+          </div>
+          <p style="font-size:13px;line-height:1.6;color:#8FA39D;max-width:260px;">A centralised tourism platform for discovering, planning and booking travel across Bangladesh.</p>
+        </div>
+        <div><h5>Explore</h5><a data-tab-link="t2">Destinations</a><a data-tab-link="t2">Seasonal Guide</a><a data-tab-link="t2">Activities</a><a data-tab-link="t2">Reviews</a></div>
+        <div><h5>Plan</h5><a data-tab-link="t3">Trip Planner</a><a data-tab-link="t3">Budget Estimator</a><a data-tab-link="t4">Booking</a><a data-tab-link="t4">Stays</a></div>
+        <div><h5>Company</h5><a id="footer-providers-link">For Providers</a><a data-go-about>About</a><a data-go-support>Support</a><a data-go-contact>Contact</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 Desh Vromon</span><span>Made for travelers across Bangladesh</span></div>
+    </footer>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 02 — EXPLORE DESTINATIONS                               -->
+<!-- ============================================================ -->
+<div class="frame-wrap" id="t2">
+  <div class="frame">
+    <div class="app-shell">
+      <aside class="filter-side" id="explore-filters">
+        <h5>Season</h5>
+        <div class="chip-row" id="season-chips">
+          <span class="chip" data-season="All">All</span>
+          <span class="chip" data-season="Summer">Summer</span>
+          <span class="chip" data-season="Monsoon">Monsoon</span>
+          <span class="chip" data-season="Autumn">Autumn</span>
+          <span class="chip on" data-season="Winter">Winter</span>
+          <span class="chip" data-season="Late Autumn">Late Autumn</span>
+          <span class="chip" data-season="Spring">Spring</span>
+        </div>
+        <h5>Destination Type</h5>
+        <div id="type-checks">
+          <div class="check-row" data-type="hill"><div class="box on"></div>Nature &amp; Hills</div>
+          <div class="check-row" data-type="beach"><div class="box on"></div>Beach &amp; Coast</div>
+          <div class="check-row" data-type="historical"><div class="box on"></div>Historical</div>
+          <div class="check-row" data-type="cultural"><div class="box on"></div>Cultural</div>
+          <div class="check-row" data-type="wildlife"><div class="box on"></div>Wildlife</div>
+          <div class="check-row" data-type="tea-garden"><div class="box on"></div>Tea Gardens</div>
+        </div>
+        <h5>Budget (per person)</h5>
+        <input type="range" id="budget-range" min="500" max="10000" step="500" value="10000" style="width:100%;accent-color:var(--teal)">
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);margin-top:6px"><span>৳500</span><span class="mono" id="budget-label">Up to ৳10,000</span><span>৳10,000+</span></div>
+        <h5>Duration</h5>
+        <div class="chip-row" id="duration-chips">
+          <span class="chip on" data-duration="any">Any</span>
+          <span class="chip" data-duration="1-2">1–2 days</span>
+          <span class="chip" data-duration="3-5">3–5 days</span>
+          <span class="chip" data-duration="7+">Week+</span>
+        </div>
+        <button class="btn btn-dark" id="apply-filters-btn" type="button" style="width:100%;margin-top:26px;">Apply Filters</button>
+        <button class="btn btn-ghost" id="reset-filters-btn" type="button" style="width:100%;margin-top:8px;">Reset</button>
+      </aside>
+
+      <main class="explore-main">
+        <div class="explore-top">
+          <div class="search-bar" style="padding:0;overflow:hidden">
+            <svg class="icon" style="width:15px;height:15px;margin-left:14px;flex-shrink:0" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input id="explore-search" type="search" placeholder="Search destinations, districts, division…" style="flex:1;border:none;background:transparent;padding:12px 14px;font:inherit;color:var(--ink);outline:none;min-width:0">
+          </div>
+          <div class="sort-box" id="explore-count">0 results · Sort by <b style="color:var(--ink)">Recommended</b></div>
+        </div>
+
+        <div class="explore-grid" id="explore-grid">
+          <div class="xcard"><div class="media m2"><div class="heart"><svg class="icon" style="width:13px;height:13px;color:var(--brick)" viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.3-9A5.4 5.4 0 0112 6.2 5.4 5.4 0 0121.3 12c-2.3 4.5-9.3 9-9.3 9z"/></svg></div><svg class="icon" viewBox="0 0 24 24"><path d="M2 20l6-11 4 7 3-5 7 9H2z"/></svg></div>
+            <div class="body"><div class="row1"><h4>Sajek Valley</h4><span class="pill pill-brick">Hill</span></div><div class="loc" style="font-size:12px;color:var(--ink-soft)">Rangamati</div><div class="stars" style="margin:8px 0">★★★★★ <span style="color:var(--ink-soft);font-weight:400">4.9</span></div><div class="dest-foot"><span class="price">From <b>৳5,100</b></span></div></div>
+          </div>
+          <div class="xcard"><div class="media m6"><div class="heart"><svg class="icon" style="width:13px;height:13px;color:var(--brick)" viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.3-9A5.4 5.4 0 0112 6.2 5.4 5.4 0 0121.3 12c-2.3 4.5-9.3 9-9.3 9z"/></svg></div><svg class="icon" viewBox="0 0 24 24"><path d="M3 12h18M6 12V7a6 6 0 0112 0v5"/></svg></div>
+            <div class="body"><div class="row1"><h4>Paharpur</h4><span class="pill pill-teal">Historical</span></div><div class="loc" style="font-size:12px;color:var(--ink-soft)">Naogaon</div><div class="stars" style="margin:8px 0">★★★★☆ <span style="color:var(--ink-soft);font-weight:400">4.4</span></div><div class="dest-foot"><span class="price">From <b>৳2,200</b></span></div></div>
+          </div>
+          <div class="xcard"><div class="media m5"><div class="heart"><svg class="icon" style="width:13px;height:13px;color:var(--brick)" viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.3-9A5.4 5.4 0 0112 6.2 5.4 5.4 0 0121.3 12c-2.3 4.5-9.3 9-9.3 9z"/></svg></div><svg class="icon" viewBox="0 0 24 24"><path d="M12 3c3 3 3 7 0 10-3-3-3-7 0-10zM12 13v8M8 21h8"/></svg></div>
+            <div class="body"><div class="row1"><h4>Srimangal</h4><span class="pill pill-teal">Tea Garden</span></div><div class="loc" style="font-size:12px;color:var(--ink-soft)">Sylhet</div><div class="stars" style="margin:8px 0">★★★★★ <span style="color:var(--ink-soft);font-weight:400">4.7</span></div><div class="dest-foot"><span class="price">From <b>৳3,800</b></span></div></div>
+          </div>
+          <div class="xcard"><div class="media m1"><div class="heart"><svg class="icon" style="width:13px;height:13px;color:var(--brick)" viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.3-9A5.4 5.4 0 0112 6.2 5.4 5.4 0 0121.3 12c-2.3 4.5-9.3 9-9.3 9z"/></svg></div><svg class="icon" viewBox="0 0 24 24"><path d="M3 18c2-3 4-3 6 0s4 3 6 0 4-3 6 0M4 12l4-8 4 8 4-8 4 8"/></svg></div>
+            <div class="body"><div class="row1"><h4>Sundarbans</h4><span class="pill pill-brick">Wildlife</span></div><div class="loc" style="font-size:12px;color:var(--ink-soft)">Khulna</div><div class="stars" style="margin:8px 0">★★★★★ <span style="color:var(--ink-soft);font-weight:400">4.8</span></div><div class="dest-foot"><span class="price">From <b>৳4,500</b></span></div></div>
+          </div>
+          <div class="xcard"><div class="media m3"><div class="heart"><svg class="icon" style="width:13px;height:13px;color:var(--brick)" viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.3-9A5.4 5.4 0 0112 6.2 5.4 5.4 0 0121.3 12c-2.3 4.5-9.3 9-9.3 9z"/></svg></div><svg class="icon" viewBox="0 0 24 24"><path d="M4 20l4-8 3 4 3-6 6 10H4z"/></svg></div>
+            <div class="body"><div class="row1"><h4>Kuakata</h4><span class="pill pill-marigold">Beach</span></div><div class="loc" style="font-size:12px;color:var(--ink-soft)">Patuakhali</div><div class="stars" style="margin:8px 0">★★★★☆ <span style="color:var(--ink-soft);font-weight:400">4.3</span></div><div class="dest-foot"><span class="price">From <b>৳3,300</b></span></div></div>
+          </div>
+          <div class="xcard"><div class="media m2"><div class="heart"><svg class="icon" style="width:13px;height:13px;color:var(--brick)" viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.3-9A5.4 5.4 0 0112 6.2 5.4 5.4 0 0121.3 12c-2.3 4.5-9.3 9-9.3 9z"/></svg></div><svg class="icon" viewBox="0 0 24 24"><path d="M2 20l6-11 4 7 3-5 7 9H2z"/></svg></div>
+            <div class="body"><div class="row1"><h4>Bandarban</h4><span class="pill pill-brick">Hill</span></div><div class="loc" style="font-size:12px;color:var(--ink-soft)">Chittagong Hill Tracts</div><div class="stars" style="margin:8px 0">★★★★★ <span style="color:var(--ink-soft);font-weight:400">4.6</span></div><div class="dest-foot"><span class="price">From <b>৳4,900</b></span></div></div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 03 — TRIP PLANNER                                       -->
+<!-- ============================================================ -->
+<div class="frame-wrap" id="t3">
+  <div class="frame">
+    <div class="planner-shell">
+      <aside class="planner-form" id="planner-form">
+        <h3>Plan your trip</h3>
+        <p>Tell us your preferences — we'll generate a day-by-day itinerary.</p>
+
+        <div class="field"><label>Destination</label>
+          <select id="plan-destination" class="box" style="width:100%;appearance:auto;cursor:pointer;background:rgba(255,255,255,.06);color:#F3ECDC;border:1px solid rgba(255,255,255,.18)">
+            <option>Sajek Valley</option>
+            <option>Sundarbans</option>
+            <option>Cox's Bazar</option>
+            <option>Srimangal</option>
+            <option>Bandarban</option>
+            <option>Saint Martin Island</option>
+            <option>Kuakata</option>
+            <option>Rangamati</option>
+            <option>Jaflong</option>
+            <option>Tanguar Haor</option>
+          </select>
+        </div>
+        <div class="field two">
+          <div><label>Start date</label><input id="plan-start" type="date" class="box" style="width:100%;background:rgba(255,255,255,.06);color:#F3ECDC;border:1px solid rgba(255,255,255,.18)"></div>
+          <div><label>End date</label><input id="plan-end" type="date" class="box" style="width:100%;background:rgba(255,255,255,.06);color:#F3ECDC;border:1px solid rgba(255,255,255,.18)"></div>
+        </div>
+        <div class="field two">
+          <div><label>Travelers</label><input id="plan-travelers" type="number" min="1" max="20" value="2" class="box" style="width:100%;background:rgba(255,255,255,.06);color:#F3ECDC;border:1px solid rgba(255,255,255,.18)"></div>
+          <div><label>Budget (৳)</label><input id="plan-budget" type="number" min="1000" step="500" value="15000" class="box" style="width:100%;background:rgba(255,255,255,.06);color:#F3ECDC;border:1px solid rgba(255,255,255,.18)"></div>
+        </div>
+        <div class="field">
+          <label>Travel style</label>
+          <div class="chip-row" id="plan-styles">
+            <span class="style-chip on" data-style="Nature">Nature</span>
+            <span class="style-chip" data-style="Adventure">Adventure</span>
+            <span class="style-chip" data-style="Relaxation">Relaxation</span>
+            <span class="style-chip" data-style="Culture">Culture</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Interests</label>
+          <div class="check-row plan-interest" style="color:#DCE7E2" data-interest="Hiking & viewpoints"><div class="box on" style="border-color:rgba(255,255,255,.3)"></div>Hiking &amp; viewpoints</div>
+          <div class="check-row plan-interest" style="color:#DCE7E2" data-interest="Local cuisine"><div class="box" style="border-color:rgba(255,255,255,.3)"></div>Local cuisine</div>
+          <div class="check-row plan-interest" style="color:#DCE7E2" data-interest="Photography spots"><div class="box on" style="border-color:rgba(255,255,255,.3)"></div>Photography spots</div>
+          <div class="check-row plan-interest" style="color:#DCE7E2" data-interest="Boat rides"><div class="box" style="border-color:rgba(255,255,255,.3)"></div>Boat rides</div>
+          <div class="check-row plan-interest" style="color:#DCE7E2" data-interest="Cultural sites"><div class="box" style="border-color:rgba(255,255,255,.3)"></div>Cultural sites</div>
+        </div>
+        <button class="btn btn-primary" id="generate-itin-btn" type="button" style="width:100%;margin-top:8px;"><svg class="icon" style="width:15px;height:15px" viewBox="0 0 24 24"><path d="M12 2l2.4 6.9L21 11l-6.6 2.1L12 20l-2.4-6.9L3 11l6.6-2.1z"/></svg> Generate Itinerary</button>
+      </aside>
+
+      <main class="itin-main">
+        <div class="itin-top">
+          <div><h3 style="font-size:20px">3-day plan · Sajek Valley</h3><p style="font-size:12.5px;color:var(--ink-soft);margin-top:4px">Generated for 2 adults · Nature &amp; Photography focus</p></div>
+          <div class="day-tabs"><div class="day-tab on">Day 1</div><div class="day-tab">Day 2</div><div class="day-tab">Day 3</div></div>
+        </div>
+
+        <div class="itin-layout">
+          <div class="tl">
+            <div class="tl-item">
+              <div class="tl-time">07:00 — Morning</div>
+              <div class="tl-card">
+                <div><h4>Departure from Khagrachari</h4><p>Chander Gari jeep ride to Sajek Valley · ~3.5 hrs</p></div>
+                <div class="tl-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 13l2-6h14l2 6M5 13h14v5H5zM7 18v2M17 18v2"/></svg></div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">12:30 — Afternoon</div>
+              <div class="tl-card">
+                <div><h4>Check-in &amp; Konglak Hill viewpoint</h4><p>Cottage check-in, cloud-viewpoint trek · Est. ৳600</p></div>
+                <div class="tl-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M2 20l6-11 4 7 3-5 7 9H2z"/></svg></div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">18:30 — Evening</div>
+              <div class="tl-card">
+                <div><h4>Sunset at Helipad &amp; local dinner</h4><p>Tribal-style dinner at cottage · Est. ৳450</p></div>
+                <div class="tl-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2v6M4.9 4.9l3.5 3.5M2 15h20M4.9 22l3.5-3.5M19.1 22l-3.5-3.5M22 15a10 10 0 00-20 0"/></svg></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="budget-card">
+            <h4>Budget breakdown</h4>
+            <div class="bar-row"><div class="lbl-row"><span>Transportation</span><span>৳3,200</span></div><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--teal)"></div></div></div>
+            <div class="bar-row"><div class="lbl-row"><span>Accommodation</span><span>৳4,800</span></div><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--indigo-2)"></div></div></div>
+            <div class="bar-row"><div class="lbl-row"><span>Food</span><span>৳2,100</span></div><div class="bar-track"><div class="bar-fill" style="width:42%;background:var(--marigold)"></div></div></div>
+            <div class="bar-row"><div class="lbl-row"><span>Activities</span><span>৳1,300</span></div><div class="bar-track"><div class="bar-fill" style="width:26%;background:var(--brick)"></div></div></div>
+            <div class="budget-total">
+              <div><div class="tot">৳11,400</div><div class="cap">of ৳15,000 budget</div></div>
+              <span class="pill pill-teal">24% left</span>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 04 — ACCOMMODATION & BOOKING                            -->
+<!-- ============================================================ -->
+<div class="frame-wrap" id="t4">
+  <div class="frame">
+    <div class="book-shell">
+      <div class="book-list">
+        <h3 style="font-size:19px;margin-bottom:4px" id="book-list-title">Stays</h3>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:12px" id="book-list-sub">Select dates in Plan a Trip, then choose a stay</p>
+
+        <!-- Room selection moved to popup (showRoomSelectionPopup) — keep hidden inputs for state -->
+        <div id="room-config" style="display:none!important" aria-hidden="true">
+          <input type="hidden" id="single-count" value="0">
+          <input type="hidden" id="double-count" value="1">
+        </div>
+
+        <div id="hotel-list"></div>
+      </div>
+
+      <aside class="book-summary" id="book-summary">
+        <h4>Booking summary</h4>
+        <div class="sum-row" id="sum-property"><span>Select a stay</span></div>
+        <div class="sum-row" id="sum-destination"><span>Destination</span><b>—</b></div>
+        <div class="sum-row" id="sum-checkin"><span>Check-in</span><b>—</b></div>
+        <div class="sum-row" id="sum-checkout"><span>Check-out</span><b>—</b></div>
+        <div class="sum-row" id="sum-guests"><span>Guests</span><b>—</b></div>
+        <div class="sum-row" id="sum-rooms"><span>Rooms</span><b>—</b></div>
+        <div class="sum-row" id="sum-nights"><span>Stay</span><b>—</b></div>
+        <div class="sum-row" id="sum-fee"><span>Service fee (4.5%)</span><b>৳0</b></div>
+        <div class="sum-total"><span>Total</span><span class="mono" id="sum-total">৳0</span></div>
+        <div style="font-size:12px;font-weight:700;color:var(--ink-soft);margin:14px 0 8px">Payment method</div>
+        <div class="pay-row" id="pay-methods">
+          <div class="pay-chip" data-pay="bKash">bKash</div>
+          <div class="pay-chip" data-pay="Nagad">Nagad</div>
+          <div class="pay-chip" data-pay="Card">Card</div>
+        </div>
+        <button class="btn btn-primary" id="confirm-book-btn" type="button" style="width:100%;">Pay &amp; Confirm Booking</button>
+        <p style="font-size:11px;color:var(--ink-soft);margin-top:10px;text-align:center;">Demo payment · Free cancellation up to 48h before check-in</p>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 05 — TRAVELER DASHBOARD                                 -->
+<!-- ============================================================ -->
+<div class="frame-wrap" id="t5">
+  <div class="frame">
+    <div class="dash-shell">
+      <aside class="dash-side" data-dashboard="traveler">
+        <div class="who">
+          <div class="av" data-user-initial>R</div>
+          <div><div class="nm" data-user-name>Traveler</div><div class="rl">Traveler</div></div>
+        </div>
+        <div class="dnav on" data-dash-section="overview"><svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg> Overview</div>
+        <div class="dnav" data-dash-section="trips"><svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M12 21s7-6.6 7-12a7 7 0 10-14 0c0 5.4 7 12 7 12z"/></svg> My Trips</div>
+        <div class="dnav" data-dash-section="bookings"><svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg> Bookings</div>
+        <div class="dnav" data-dash-section="reviews"><svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M12 17.3l-6.2 3.3 1.2-6.9L2 8.9l7-1L12 1.5l3 6.4 7 1-5 4.8 1.2 6.9z"/></svg> Reviews</div>
+        <div class="dnav" data-dash-section="profile"><svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/></svg> Profile</div>
+      </aside>
+
+      <main class="dash-main">
+        <div class="dash-head">
+          <div>
+            <div class="eyebrow" style="color:var(--teal)">Traveler workspace</div>
+            <h2>Welcome back, <span data-welcome-name>Traveler</span> 👋</h2>
+            <p>Here's what's happening with your trips.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" data-plan-trip>+ Plan new trip</button>
+        </div>
+
+        <div class="mobile-dash-nav">
+          <select aria-label="Traveler dashboard navigation" data-mobile-dash>
+            <option value="overview">Overview</option>
+            <option value="trips">My Trips</option>
+            <option value="bookings">Bookings</option>
+            <option value="reviews">Reviews</option>
+            <option value="profile">Profile</option>
+          </select>
+        </div>
+
+        <div class="stat-grid">
+          <div class="statc">
+            <div class="top"><div class="ic" style="background:var(--teal-light);color:var(--teal)"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.6 7-12a7 7 0 10-14 0c0 5.4 7 12 7 12z"/></svg></div></div>
+            <div class="num" data-stat="upcoming">2</div><div class="lbl">Upcoming trips</div>
+            <div class="delta" style="color:var(--teal)">Active travel plans</div>
+          </div>
+          <div class="statc">
+            <div class="top"><div class="ic" style="background:#FBEACB;color:#8A6300"><svg class="icon" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div></div>
+            <div class="num mono" data-stat="spent">৳0</div><div class="lbl">Total spent</div>
+            <div class="delta" style="color:#8A6300">Confirmed bookings</div>
+          </div>
+          <div class="statc">
+            <div class="top"><div class="ic" style="background:var(--brick-light);color:var(--brick)"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div></div>
+            <div class="num" data-stat="visited">9</div><div class="lbl">Places visited</div>
+            <div class="delta" style="color:var(--brick)">Travel history</div>
+          </div>
+          <div class="statc">
+            <div class="top"><div class="ic" style="background:#E7E1F5;color:#5B3FA8"><svg class="icon" viewBox="0 0 24 24"><path d="M12 17.3l-6.2 3.3 1.2-6.9L2 8.9l7-1L12 1.5l3 6.4 7 1-5 4.8 1.2 6.9z"/></svg></div></div>
+            <div class="num" data-stat="reviews">6</div><div class="lbl">Reviews written</div>
+            <div class="delta" style="color:#5B3FA8">Community activity</div>
+          </div>
+        </div>
+
+        <div class="dash-2col">
+          <div>
+            <div class="panel" data-dash-panel="overview">
+              <div class="panel-head"><h4>Upcoming trip</h4><span class="pill pill-teal">Confirmed</span></div>
+              <div class="trip-hero">
+                <div class="cd">14 – 17 NOV 2026 · 3 DAYS</div>
+                <h3>Sajek Valley, Rangamati</h3>
+                <p style="font-size:12.5px;color:#DCE7E2">2 travelers · Megh Machang Cottage · Chander Gari transport booked</p>
+                <div class="progress-track"><div class="progress-fill" style="width:72%"></div></div>
+                <p style="font-size:11px;color:#B8D8CF;margin-top:6px">Trip preparation · 72%</p>
+              </div>
+            </div>
+
+            <div class="panel" data-dash-panel="bookings">
+              <div class="panel-head"><h4>Recent bookings</h4><a class="dash-view-all" style="font-size:12.5px;color:var(--teal);font-weight:700;cursor:pointer">View all</a></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Service</th><th>Type</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+                  <tbody data-bookings-body>
+                    <tr><td>Megh Machang Cottage</td><td>Accommodation</td><td>14 Nov</td><td class="mono">৳7,520</td><td><span class="status ok">Confirmed</span></td></tr>
+                    <tr><td>Khagrachari → Sajek Jeep</td><td>Transport</td><td>14 Nov</td><td class="mono">৳3,200</td><td><span class="status ok">Confirmed</span></td></tr>
+                    <tr><td>Sundarbans Boat Safari</td><td>Activity</td><td>02 Dec</td><td class="mono">৳4,500</td><td><span class="status pend">Pending</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel" data-dash-panel="trips" style="display:none">
+              <div class="panel-head"><h4>My trips</h4><span class="pill pill-teal">1 active plan</span></div>
+              <div class="trip-hero">
+                <div class="cd">14 – 17 NOV 2026 · 3 DAYS</div>
+                <h3>Sajek Valley, Rangamati</h3>
+                <p style="font-size:12.5px;color:#DCE7E2">Nature-focused itinerary · 2 travelers · Budget ৳15,000</p>
+                <div class="progress-track"><div class="progress-fill" style="width:72%"></div></div>
+              </div>
+              
+            <div class="panel" style="margin-top:16px">
+              <div class="panel-head"><h4>Saved trip plans</h4><span class="pill pill-teal" data-trip-count>0</span></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Destination</th><th>Style</th><th>Travelers</th><th>Status</th><th></th></tr></thead>
+                  <tbody data-tripplans-body>
+                    <tr><td colspan="5" style="color:var(--ink-soft);text-align:center;padding:14px 0">Log in to see saved plans.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <button class="btn btn-dark btn-sm" style="margin-top:14px" data-open-planner>Open trip planner →</button>
+            </div>
+            </div>
+
+            <div class="panel" data-dash-panel="reviews" style="display:none">
+              <div class="panel-head"><h4>Reviews & ratings</h4><span class="pill pill-marigold">6 written</span></div>
+              <p style="font-size:13px;color:var(--ink-soft);line-height:1.6">Your reviews help other travelers choose reliable accommodation, transport and activities.</p>
+              <div style="margin-top:16px;padding:14px;background:var(--cream);border-radius:11px;border:1px solid var(--line)">
+                <div class="stars">★★★★★ <span style="color:var(--ink-soft);font-weight:400">Your latest review</span></div>
+                <div style="font-size:12.5px;margin-top:7px;color:var(--ink-soft)">Thank you for contributing to the Desh Vromon travel community.</div>
+              </div>
+            </div>
+
+            <div class="panel" data-dash-panel="profile" style="display:none">
+              <div class="panel-head"><h4>Profile</h4><span class="pill pill-teal">Traveler</span></div>
+              <div class="profile-card" style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+                <div class="av" data-profile-initial style="width:48px;height:48px;border-radius:13px;background:var(--marigold);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700">R</div>
+                <div><div style="font-weight:700" data-profile-name>Traveler</div><div style="font-size:12px;color:var(--ink-soft)" data-profile-email>Not signed in</div></div>
+              </div>
+              <form id="profile-form">
+                <div class="form-group"><label>Full name</label><input class="form-input" name="name" data-profile-input="name" required></div>
+                <div class="form-group"><label>Email</label><input class="form-input" name="email" data-profile-input="email" type="email" disabled style="opacity:.6;cursor:not-allowed"></div>
+                <div class="form-group"><label>Phone number</label><input class="form-input" name="phone" data-profile-input="phone" placeholder="e.g. 017XXXXXXXX"></div>
+                <button class="btn btn-primary btn-sm" type="submit">Save changes</button>
+              </form>
+              <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin-top:16px">Keep your traveler profile updated to support personalized trip planning and booking workflows.</p>
+            </div>
+          </div>
+
+          <div>
+            <div class="panel">
+              <h4 style="margin-bottom:14px">Trip expense breakdown</h4>
+              <div class="bar-row"><div class="lbl-row"><span>Accommodation</span><span>44%</span></div><div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--indigo-2)"></div></div></div>
+              <div class="bar-row"><div class="lbl-row"><span>Transportation</span><span>29%</span></div><div class="bar-track"><div class="bar-fill" style="width:29%;background:var(--teal)"></div></div></div>
+              <div class="bar-row"><div class="lbl-row"><span>Activities</span><span>18%</span></div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--marigold)"></div></div></div>
+              <div class="bar-row"><div class="lbl-row"><span>Food</span><span>9%</span></div><div class="bar-track"><div class="bar-fill" style="width:9%;background:var(--brick)"></div></div></div>
+              <div style="margin-top:17px;padding-top:14px;border-top:1px dashed var(--line);display:flex;justify-content:space-between">
+                <span style="font-size:12px;color:var(--ink-soft)">Estimated trip budget</span><b class="mono" style="font-size:13px">৳15,000</b>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h4 style="margin-bottom:12px">Seasonal tip</h4>
+              <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;">Winter (Poush–Magh) is peak season for hill and forest travel. Book accommodation early for Sajek Valley and the Sundarbans.</p>
+            </div>
+
+            <div class="panel">
+              <h4 style="margin-bottom:12px">Quick actions</h4>
+              <div style="display:grid;gap:8px">
+                <button class="btn btn-outline btn-sm" data-plan-trip>Plan a new trip</button>
+                <button class="btn btn-ghost btn-sm" data-go-bookings>View my bookings</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 06 — PROVIDER DASHBOARD                                 -->
+<!-- ============================================================ -->
+<div class="frame-wrap" id="t6">
+  <div class="frame">
+    <div class="dash-shell">
+      <aside class="dash-side" data-dashboard="provider">
+        <div class="who"><div class="av" data-user-initial>P</div><div><div class="nm" data-user-name>Provider</div><div class="rl">Verified Provider</div></div></div>
+        <div class="dnav on" data-dash-section="overview"><svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg> Dashboard</div>
+        <div class="dnav" data-dash-section="services"><svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> My Services</div>
+        <div class="dnav" data-dash-section="bookings"><svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg> Bookings</div>
+        <div class="dnav" data-dash-section="earnings"><svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Earnings</div>
+        <div class="dnav" data-dash-section="profile"><svg class="icon" style="width:16px;height:16px" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/></svg> Profile</div>
+      </aside>
+      <main class="dash-main">
+        <div class="dash-head">
+          <div><h2>Provider dashboard</h2><p>Track your bookings, earnings and service performance.</p></div>
+          <button class="btn btn-primary btn-sm" id="add-service-btn-top">+ Add new service</button>
+        </div>
+
+        <!-- OVERVIEW -->
+        <div class="panel" data-dash-panel="overview">
+          <div class="stat-grid">
+            <div class="statc"><div class="top"><div class="ic" style="background:#FBEACB;color:#8A6300"><svg class="icon" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div></div><div class="num mono" data-provider-stat="earnings">৳0</div><div class="lbl">Earnings (confirmed)</div></div>
+            <div class="statc"><div class="top"><div class="ic" style="background:var(--teal-light);color:var(--teal)"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></div></div><div class="num" data-provider-stat="bookings">0</div><div class="lbl">Total bookings</div></div>
+            <div class="statc"><div class="top"><div class="ic" style="background:var(--brick-light);color:var(--brick)"><svg class="icon" viewBox="0 0 24 24"><path d="M12 17.3l-6.2 3.3 1.2-6.9L2 8.9l7-1L12 1.5l3 6.4 7 1-5 4.8 1.2 6.9z"/></svg></div></div><div class="num" data-provider-stat="services">0</div><div class="lbl">Active services</div></div>
+            <div class="statc"><div class="top"><div class="ic" style="background:#E7E1F5;color:#5B3FA8"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div></div><div class="num" data-provider-stat="pending">0</div><div class="lbl">Pending requests</div></div>
+          </div>
+          <div class="dash-2col" style="margin-top:18px">
+            <div class="panel" style="box-shadow:none;border:1px solid var(--line)">
+              <div class="panel-head"><h4>Recent booking requests</h4><a data-dash-jump-btn="bookings" style="font-size:12.5px;color:var(--teal);font-weight:700;cursor:pointer">View all</a></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Traveler</th><th>Service</th><th>Amount</th><th>Status</th></tr></thead>
+                  <tbody data-provider-overview-bookings>
+                    <tr><td colspan="4" style="color:var(--ink-soft);text-align:center;padding:14px 0">No recent bookings.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="panel" style="box-shadow:none;border:1px solid var(--line)">
+              <h4 style="margin-bottom:12px">Verification status</h4>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:var(--teal-light);color:var(--teal);display:flex;align-items:center;justify-content:center;"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+                <div><div style="font-weight:700;font-size:13.5px;">Verified provider</div><div style="font-size:12px;color:var(--ink-soft)">You can list services and receive bookings</div></div>
+              </div>
+              <button class="btn btn-primary btn-sm" id="add-service-link" type="button" style="margin-top:16px">+ Add a service</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SERVICES -->
+        <div class="panel" data-dash-panel="services" style="display:none">
+          <div class="panel-head"><h4>Manage services</h4><a id="add-service-link-2" style="font-size:12.5px;color:var(--teal);font-weight:700;cursor:pointer">+ Add service</a></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Service</th><th>Destination</th><th>Mode</th><th>Price / night</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody data-services-body>
+                <tr><td colspan="6" style="color:var(--ink-soft);text-align:center;padding:18px 0">Log in as a provider to manage services.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- BOOKINGS -->
+        <div class="panel" data-dash-panel="bookings" style="display:none">
+          <div class="panel-head"><h4>Booking requests</h4></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Traveler</th><th>Service</th><th>Dates</th><th>Amount</th><th>Action</th></tr></thead>
+              <tbody data-provider-bookings-body>
+                <tr><td colspan="5" style="color:var(--ink-soft);text-align:center;padding:18px 0">Log in as a provider to see booking requests.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- EARNINGS -->
+        <div class="panel" data-dash-panel="earnings" style="display:none">
+          <h4 style="margin-bottom:6px">Earnings overview</h4>
+          <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px">Confirmed booking totals only. Pending / cancelled are excluded.</p>
+          <div class="stat-grid" style="margin-bottom:18px">
+            <div class="statc"><div class="num mono" data-provider-stat="earnings-detail">৳0</div><div class="lbl">Total confirmed</div></div>
+            <div class="statc"><div class="num" data-provider-stat="confirmed-count">0</div><div class="lbl">Confirmed bookings</div></div>
+          </div>
+          <div class="bars" data-provider-earnings-bars>
+            <div class="b" style="height:20%"><span>—</span></div>
+          </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="panel" data-dash-panel="profile" style="display:none">
+          <h4 style="margin-bottom:14px">Provider profile</h4>
+          <div class="form-group"><label>Full name</label><input class="form-input" id="prov-profile-name" readonly></div>
+          <div class="form-group"><label>Email</label><input class="form-input" id="prov-profile-email" readonly></div>
+          <div class="form-group"><label>Role</label><input class="form-input" id="prov-profile-role" readonly></div>
+          <p style="font-size:12.5px;color:var(--ink-soft);margin-top:8px">Profile details come from your account. Contact support to change email.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const store={get:(k,f)=>{try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),remove:k=>localStorage.removeItem(k)};
+
+/* ===== Backend connection (MongoDB via the Express API) =====
+   Change API_BASE if your backend runs on a different host/port. */
+const API_BASE='http://localhost:5000/api';
+const FALLBACK_DESTINATIONS=[{"name": "Sajek Valley", "location": "Baghaichhari", "district": "Rangamati", "division": "Chittagong", "type": "hill", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 5100, "durationMin": 2, "durationMax": 4, "rating": 4.9, "reviewCount": 960, "description": "Cloud-covered hilltop valley with tribal villages and sunrise views.", "highlights": ["Konglak Hill", "Helipad sunset", "Ruilui Para"]}, {"name": "Sundarbans", "location": "Mongla / Bagerhat", "district": "Bagerhat", "division": "Khulna", "type": "wildlife", "season": "Winter", "seasons": ["Winter", "Late Autumn"], "priceFrom": 4500, "durationMin": 2, "durationMax": 5, "rating": 4.8, "reviewCount": 2140, "description": "World's largest mangrove forest and home of the Royal Bengal Tiger.", "highlights": ["Tiger point", "Hiron Point", "Boat safari"]}, {"name": "Cox's Bazar", "location": "Cox's Bazar", "district": "Cox's Bazar", "division": "Chittagong", "type": "beach", "season": "Winter", "seasons": ["Winter", "Spring", "Late Autumn"], "priceFrom": 6200, "durationMin": 2, "durationMax": 7, "rating": 4.6, "reviewCount": 5830, "description": "World's longest natural sea beach with Himchari and Inani.", "highlights": ["Laboni Beach", "Himchari", "Inani", "Marine Drive"]}, {"name": "Srimangal", "location": "Srimangal", "district": "Moulvibazar", "division": "Sylhet", "type": "tea-garden", "season": "Winter", "seasons": ["Winter", "Spring", "Autumn"], "priceFrom": 3800, "durationMin": 1, "durationMax": 3, "rating": 4.7, "reviewCount": 1390, "description": "Tea capital of Bangladesh with Lawachara rainforest and seven-color tea.", "highlights": ["Lawachara NP", "Tea estates", "Nilkantha Tea Cabin"]}, {"name": "Paharpur", "location": "Badalgachhi", "district": "Naogaon", "division": "Rajshahi", "type": "historical", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 2200, "durationMin": 1, "durationMax": 2, "rating": 4.4, "reviewCount": 410, "description": "UNESCO World Heritage Somapura Mahavihara Buddhist monastery ruins.", "highlights": ["Somapura Mahavihara", "Museum"]}, {"name": "Kuakata", "location": "Kuakata", "district": "Patuakhali", "division": "Barisal", "type": "beach", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 3300, "durationMin": 2, "durationMax": 4, "rating": 4.3, "reviewCount": 780, "description": "Daughter of the Sea — rare spot to see both sunrise and sunset over the Bay.", "highlights": ["Sunrise point", "Sunset point", "Gangamati forest"]}, {"name": "Bandarban", "location": "Bandarban Sadar", "district": "Bandarban", "division": "Chittagong", "type": "hill", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 4900, "durationMin": 2, "durationMax": 5, "rating": 4.6, "reviewCount": 1120, "description": "Highest hill district with waterfalls, caves and indigenous culture.", "highlights": ["Nilgiri", "Nafakhum", "Buddha Dhatu Jadi"]}, {"name": "Saint Martin Island", "location": "Saint Martin", "district": "Cox's Bazar", "division": "Chittagong", "type": "beach", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 5500, "durationMin": 2, "durationMax": 3, "rating": 4.5, "reviewCount": 3200, "description": "Only coral island of Bangladesh in the Bay of Bengal.", "highlights": ["Coral beach", "Chera Dwip", "Snorkeling"]}, {"name": "Jaflong", "location": "Jaflong", "district": "Sylhet", "division": "Sylhet", "type": "hill", "season": "Winter", "seasons": ["Winter", "Spring", "Autumn"], "priceFrom": 2800, "durationMin": 1, "durationMax": 2, "rating": 4.4, "reviewCount": 980, "description": "Piyain River stone collection site with views of the Meghalaya hills.", "highlights": ["Piyain River", "Zero Point", "Lalakhal"]}, {"name": "Lalakhal", "location": "Sharighat", "district": "Sylhet", "division": "Sylhet", "type": "hill", "season": "Winter", "seasons": ["Winter", "Spring", "Monsoon"], "priceFrom": 2500, "durationMin": 1, "durationMax": 2, "rating": 4.5, "reviewCount": 640, "description": "Turquoise river boat ride through tea gardens toward the Indian border.", "highlights": ["Blue water boat", "Tea garden views"]}, {"name": "Ratargul Swamp Forest", "location": "Fatehpur", "district": "Sylhet", "division": "Sylhet", "type": "wildlife", "season": "Monsoon", "seasons": ["Monsoon", "Autumn", "Summer"], "priceFrom": 2000, "durationMin": 1, "durationMax": 2, "rating": 4.6, "reviewCount": 1100, "description": "Freshwater swamp forest best explored by boat in the rainy season.", "highlights": ["Boat trails", "Bird watching"]}, {"name": "Bisanakandi", "location": "Bisanakandi", "district": "Sylhet", "division": "Sylhet", "type": "hill", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 2300, "durationMin": 1, "durationMax": 2, "rating": 4.3, "reviewCount": 720, "description": "Stone bed of the Dholai river beside the Meghalaya foothills.", "highlights": ["River stones", "Border views"]}, {"name": "Rangamati", "location": "Rangamati Sadar", "district": "Rangamati", "division": "Chittagong", "type": "hill", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 4200, "durationMin": 2, "durationMax": 4, "rating": 4.5, "reviewCount": 890, "description": "Kaptai Lake, hanging bridge and tribal culture of the Hill Tracts.", "highlights": ["Kaptai Lake", "Hanging Bridge", "Shuvolong"]}, {"name": "Khagrachhari", "location": "Khagrachhari Sadar", "district": "Khagrachhari", "division": "Chittagong", "type": "hill", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 3600, "durationMin": 2, "durationMax": 4, "rating": 4.4, "reviewCount": 540, "description": "Alutila cave, richang waterfall and gateway to Sajek.", "highlights": ["Alutila Cave", "Richang Falls", "Yong Range"]}, {"name": "Nilgiri", "location": "Thanchi Road", "district": "Bandarban", "division": "Chittagong", "type": "hill", "season": "Winter", "seasons": ["Winter", "Late Autumn"], "priceFrom": 4800, "durationMin": 1, "durationMax": 3, "rating": 4.7, "reviewCount": 1500, "description": "Cloud-kissed army resort viewpoint above the Sangu valley.", "highlights": ["Nilgiri resort view", "Cloud sea"]}, {"name": "Nafakhum", "location": "Remakri", "district": "Bandarban", "division": "Chittagong", "type": "hill", "season": "Monsoon", "seasons": ["Monsoon", "Autumn", "Winter"], "priceFrom": 6000, "durationMin": 3, "durationMax": 5, "rating": 4.8, "reviewCount": 430, "description": "Broad curtain waterfall on the Sangu river — the Niagara of Bangladesh.", "highlights": ["Nafakhum falls", "Remakri trail"]}, {"name": "Keokradong", "location": "Ruma", "district": "Bandarban", "division": "Chittagong", "type": "hill", "season": "Winter", "seasons": ["Winter", "Late Autumn"], "priceFrom": 4500, "durationMin": 2, "durationMax": 4, "rating": 4.6, "reviewCount": 680, "description": "One of the highest peaks in Bangladesh with overnight camp options.", "highlights": ["Peak trek", "Camping"]}, {"name": "Himchari", "location": "Himchari", "district": "Cox's Bazar", "division": "Chittagong", "type": "beach", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 3000, "durationMin": 1, "durationMax": 2, "rating": 4.2, "reviewCount": 910, "description": "National park with waterfall and sea cliffs near Cox's Bazar.", "highlights": ["Himchari waterfall", "View point"]}, {"name": "Inani Beach", "location": "Inani", "district": "Cox's Bazar", "division": "Chittagong", "type": "beach", "season": "Winter", "seasons": ["Winter", "Spring", "Late Autumn"], "priceFrom": 2800, "durationMin": 1, "durationMax": 3, "rating": 4.3, "reviewCount": 1200, "description": "Coral stones and cleaner stretch of beach south of Cox's Bazar.", "highlights": ["Coral stones", "Quiet beach"]}, {"name": "Patenga Beach", "location": "Patenga", "district": "Chattogram", "division": "Chittagong", "type": "beach", "season": "Winter", "seasons": ["Winter", "Spring", "Autumn"], "priceFrom": 1500, "durationMin": 1, "durationMax": 1, "rating": 4, "reviewCount": 2100, "description": "City beach of Chattogram with marine drive and evening crowds.", "highlights": ["Marine Drive", "Sunset"]}, {"name": "Parki Beach", "location": "Anhwara", "district": "Chattogram", "division": "Chittagong", "type": "beach", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 1800, "durationMin": 1, "durationMax": 2, "rating": 4.1, "reviewCount": 560, "description": "Quieter alternative to Patenga near the Karnaphuli estuary.", "highlights": ["Quiet beach", "Estuary views"]}, {"name": "Mahasthangarh", "location": "Mahasthan", "district": "Bogura", "division": "Rajshahi", "type": "historical", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 1800, "durationMin": 1, "durationMax": 2, "rating": 4.3, "reviewCount": 390, "description": "Oldest known city ruins of Bangladesh on the Karatoya river.", "highlights": ["Citadel", "Museum", "Gokul Medh"]}, {"name": "Kantaji Temple", "location": "Kantajir", "district": "Dinajpur", "division": "Rangpur", "type": "historical", "season": "Winter", "seasons": ["Winter", "Spring", "Late Autumn"], "priceFrom": 1600, "durationMin": 1, "durationMax": 2, "rating": 4.5, "reviewCount": 520, "description": "18th-century terracotta Hindu temple masterpiece in Dinajpur.", "highlights": ["Terracotta panels", "Temple complex"]}, {"name": "Mainamati", "location": "Kotbari", "district": "Cumilla", "division": "Chittagong", "type": "historical", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 1700, "durationMin": 1, "durationMax": 2, "rating": 4.2, "reviewCount": 340, "description": "Buddhist archaeological sites of Vihara and Shalban ruins.", "highlights": ["Shalban Vihara", "Mainamati Museum"]}, {"name": "Lalbagh Fort", "location": "Old Dhaka", "district": "Dhaka", "division": "Dhaka", "type": "historical", "season": "Winter", "seasons": ["Winter", "Autumn", "Spring", "Late Autumn"], "priceFrom": 500, "durationMin": 1, "durationMax": 1, "rating": 4.1, "reviewCount": 2800, "description": "Incomplete Mughal fort of Shaista Khan era in the heart of Old Dhaka.", "highlights": ["Diwan-i-Aam", "Tomb of Pari Bibi", "Mosque"]}, {"name": "Ahsan Manzil", "location": "Islampur", "district": "Dhaka", "division": "Dhaka", "type": "historical", "season": "Winter", "seasons": ["Winter", "Autumn", "Spring"], "priceFrom": 400, "durationMin": 1, "durationMax": 1, "rating": 4.2, "reviewCount": 1900, "description": "Pink Palace of the Dhaka Nawabs on the Buriganga riverfront.", "highlights": ["Museum", "Riverfront"]}, {"name": "Sonargaon", "location": "Panam City", "district": "Narayanganj", "division": "Dhaka", "type": "historical", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 1200, "durationMin": 1, "durationMax": 2, "rating": 4.3, "reviewCount": 760, "description": "Ancient capital with Panam City colonial ruins and folk museum.", "highlights": ["Panam City", "Folk Art Museum", "Goaldi Mosque"]}, {"name": "Sreemangal Lawachara", "location": "Lawachara", "district": "Moulvibazar", "division": "Sylhet", "type": "wildlife", "season": "Winter", "seasons": ["Winter", "Spring", "Autumn"], "priceFrom": 3200, "durationMin": 1, "durationMax": 3, "rating": 4.6, "reviewCount": 880, "description": "National park habitat of capped langur and rare hoolock gibbon.", "highlights": ["Forest trails", "Wildlife spotting"]}, {"name": "Madhabkunda Waterfall", "location": "Barlekha", "district": "Moulvibazar", "division": "Sylhet", "type": "hill", "season": "Monsoon", "seasons": ["Monsoon", "Autumn", "Summer"], "priceFrom": 2100, "durationMin": 1, "durationMax": 2, "rating": 4.4, "reviewCount": 990, "description": "One of the largest waterfalls in Bangladesh, fullest in monsoon.", "highlights": ["Waterfall", "Picnic spots"]}, {"name": "Tanguar Haor", "location": "Tahirpur", "district": "Sunamganj", "division": "Sylhet", "type": "wildlife", "season": "Winter", "seasons": ["Winter", "Late Autumn"], "priceFrom": 3500, "durationMin": 2, "durationMax": 3, "rating": 4.7, "reviewCount": 610, "description": "Ramsar wetland with migratory birds and floating villages.", "highlights": ["Bird watching", "Haor boat", "Watch tower"]}, {"name": "Hakalu Haor", "location": "Baralekha area", "district": "Moulvibazar", "division": "Sylhet", "type": "wildlife", "season": "Winter", "seasons": ["Winter", "Late Autumn"], "priceFrom": 3000, "durationMin": 1, "durationMax": 3, "rating": 4.3, "reviewCount": 280, "description": "Seasonal wetland famous for winter bird migration.", "highlights": ["Migratory birds", "Boat ride"]}, {"name": "Bichanakandi Zero Point", "location": "Companyganj", "district": "Sylhet", "division": "Sylhet", "type": "hill", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 2400, "durationMin": 1, "durationMax": 2, "rating": 4.2, "reviewCount": 450, "description": "Border zero-point experience with crystal river streams.", "highlights": ["Zero Point", "Stream walk"]}, {"name": "Chandranath Hill", "location": "Sitakunda", "district": "Chattogram", "division": "Chittagong", "type": "cultural", "season": "Winter", "seasons": ["Winter", "Spring", "Late Autumn"], "priceFrom": 1500, "durationMin": 1, "durationMax": 1, "rating": 4.3, "reviewCount": 870, "description": "Sacred hill temple complex with panoramic Bay of Bengal views.", "highlights": ["Temple", "Cable car", "Viewpoint"]}, {"name": "Foy's Lake", "location": "Khulshi", "district": "Chattogram", "division": "Chittagong", "type": "cultural", "season": "Winter", "seasons": ["Winter", "Spring", "Autumn", "Summer"], "priceFrom": 1200, "durationMin": 1, "durationMax": 1, "rating": 4, "reviewCount": 2400, "description": "Artificial lake and amusement park popular for day trips.", "highlights": ["Lake boat", "Amusement rides"]}, {"name": "Kaptai Lake", "location": "Kaptai", "district": "Rangamati", "division": "Chittagong", "type": "hill", "season": "Winter", "seasons": ["Winter", "Spring", "Late Autumn"], "priceFrom": 4000, "durationMin": 1, "durationMax": 3, "rating": 4.5, "reviewCount": 720, "description": "Largest man-made lake in Bangladesh with boat trips to Shuvolong.", "highlights": ["Lake cruise", "Shuvolong falls"]}, {"name": "Boga Lake", "location": "Ruma", "district": "Bandarban", "division": "Chittagong", "type": "hill", "season": "Winter", "seasons": ["Winter", "Late Autumn"], "priceFrom": 5200, "durationMin": 2, "durationMax": 4, "rating": 4.7, "reviewCount": 510, "description": "High-altitude natural lake reached by trek from Ruma.", "highlights": ["Lake camp", "Trek"]}, {"name": "Amiakhum", "location": "Thanchi", "district": "Bandarban", "division": "Chittagong", "type": "hill", "season": "Monsoon", "seasons": ["Monsoon", "Autumn", "Winter"], "priceFrom": 6500, "durationMin": 3, "durationMax": 6, "rating": 4.8, "reviewCount": 290, "description": "Remote waterfall near the Myanmar border for serious trekkers.", "highlights": ["Amiakhum falls", "Multi-day trek"]}, {"name": "Teknaf", "location": "Teknaf", "district": "Cox's Bazar", "division": "Chittagong", "type": "beach", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 3500, "durationMin": 1, "durationMax": 3, "rating": 4.2, "reviewCount": 640, "description": "Southernmost tip of mainland Bangladesh facing Myanmar.", "highlights": ["Teknaf beach", "River Naf", "Wildlife sanctuary"]}, {"name": "Nijhum Dwip", "location": "Hatiya", "district": "Noakhali", "division": "Chittagong", "type": "wildlife", "season": "Winter", "seasons": ["Winter", "Late Autumn"], "priceFrom": 4800, "durationMin": 2, "durationMax": 4, "rating": 4.5, "reviewCount": 380, "description": "Island of silence with spotted deer and mangrove forests.", "highlights": ["Deer herds", "Mangrove trails"]}, {"name": "Char Kukri Mukri", "location": "Charfasson", "district": "Bhola", "division": "Barisal", "type": "wildlife", "season": "Winter", "seasons": ["Winter"], "priceFrom": 4200, "durationMin": 2, "durationMax": 3, "rating": 4.3, "reviewCount": 210, "description": "Coastal wildlife sanctuary with deer, monkeys and migratory birds.", "highlights": ["Sanctuary", "Beach forest"]}, {"name": "Kuakata Buddhist Temple", "location": "Kuakata", "district": "Patuakhali", "division": "Barisal", "type": "cultural", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 2000, "durationMin": 1, "durationMax": 2, "rating": 4.1, "reviewCount": 180, "description": "Seaside Rakhine Buddhist temples and cultural experience.", "highlights": ["Temple", "Rakhine culture"]}, {"name": "Barisal River Tour", "location": "Barisal Sadar", "district": "Barisal", "division": "Barisal", "type": "cultural", "season": "Monsoon", "seasons": ["Monsoon", "Autumn", "Summer"], "priceFrom": 2500, "durationMin": 1, "durationMax": 3, "rating": 4.2, "reviewCount": 330, "description": "Riverine Bangladesh experience on the Kirtankhola and nearby canals.", "highlights": ["Launch ride", "Floating markets"]}, {"name": "Puthia Temple Complex", "location": "Puthia", "district": "Rajshahi", "division": "Rajshahi", "type": "historical", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 1400, "durationMin": 1, "durationMax": 1, "rating": 4.4, "reviewCount": 410, "description": "Cluster of ornate Hindu temples including the large Shiva temple.", "highlights": ["Shiva temple", "Govinda temple"]}, {"name": "Varendra Museum", "location": "Rajshahi City", "district": "Rajshahi", "division": "Rajshahi", "type": "historical", "season": "Winter", "seasons": ["Winter", "Autumn", "Spring"], "priceFrom": 800, "durationMin": 1, "durationMax": 1, "rating": 4.2, "reviewCount": 290, "description": "Oldest museum in Bangladesh with rich archaeological collections.", "highlights": ["Museum galleries"]}, {"name": "Baghaichhari Lake", "location": "Baghaichhari", "district": "Rangamati", "division": "Chittagong", "type": "hill", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 3000, "durationMin": 1, "durationMax": 3, "rating": 4.3, "reviewCount": 260, "description": "Scenic upazila lake area on the way toward Sajek.", "highlights": ["Lake views", "Hill roads"]}, {"name": "Sangu River Valley", "location": "Thanchi / Ruma", "district": "Bandarban", "division": "Chittagong", "type": "hill", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 5000, "durationMin": 2, "durationMax": 5, "rating": 4.6, "reviewCount": 340, "description": "Crystal river valley treks connecting remote hill villages.", "highlights": ["River trek", "Village stays"]}, {"name": "Old Dhaka Food Trail", "location": "Chawk Bazar / Islampur", "district": "Dhaka", "division": "Dhaka", "type": "cultural", "season": "Winter", "seasons": ["Winter", "Autumn", "Spring", "Summer", "Monsoon", "Late Autumn"], "priceFrom": 1000, "durationMin": 1, "durationMax": 1, "rating": 4.5, "reviewCount": 1600, "description": "Biryani, kebabs, bakarkhani and heritage streets of historic Dhaka.", "highlights": ["Haji biryani", "Star Kabab", "Shankhari Bazar"]}, {"name": "National Parliament & Area", "location": "Sher-e-Bangla Nagar", "district": "Dhaka", "division": "Dhaka", "type": "cultural", "season": "Winter", "seasons": ["Winter", "Autumn", "Spring", "Late Autumn"], "priceFrom": 600, "durationMin": 1, "durationMax": 1, "rating": 4.4, "reviewCount": 1100, "description": "Louis Kahn designed National Assembly complex and surrounding parks.", "highlights": ["Parliament exterior", "Chandrima Udyan"]}, {"name": "Jamalpur Lauchapra", "location": "Dewanganj", "district": "Jamalpur", "division": "Mymensingh", "type": "cultural", "season": "Monsoon", "seasons": ["Monsoon", "Autumn"], "priceFrom": 1800, "durationMin": 1, "durationMax": 2, "rating": 4, "reviewCount": 120, "description": "Seasonal riverside sandbars and rural river life in the Jamuna basin.", "highlights": ["River islands", "Rural stay"]}, {"name": "Modhupur National Park", "location": "Madhupur", "district": "Tangail", "division": "Dhaka", "type": "wildlife", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 1500, "durationMin": 1, "durationMax": 2, "rating": 4.1, "reviewCount": 350, "description": "Sal forest reserve north of Dhaka with walking trails.", "highlights": ["Forest trails", "Birding"]}, {"name": "Bhawal National Park", "location": "Gazipur", "district": "Gazipur", "division": "Dhaka", "type": "wildlife", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 900, "durationMin": 1, "durationMax": 1, "rating": 3.9, "reviewCount": 780, "description": "Easy day-trip sal forest and picnic area near the capital.", "highlights": ["Picnic", "Forest walk"]}, {"name": "Sitakunda Eco Park", "location": "Sitakunda", "district": "Chattogram", "division": "Chittagong", "type": "wildlife", "season": "Winter", "seasons": ["Winter", "Spring", "Late Autumn"], "priceFrom": 1200, "durationMin": 1, "durationMax": 1, "rating": 4, "reviewCount": 540, "description": "Hill eco-park with trails near Chandranath.", "highlights": ["Eco trails"]}, {"name": "Baitul Aman Jame Mosque", "location": "Guthia", "district": "Barisal", "division": "Barisal", "type": "cultural", "season": "Winter", "seasons": ["Winter", "Spring", "Autumn"], "priceFrom": 1100, "durationMin": 1, "durationMax": 1, "rating": 4.3, "reviewCount": 470, "description": "Grand riverside mosque complex known as the Guthia Mosque.", "highlights": ["Mosque architecture"]}, {"name": "Mujibnagar Memorial", "location": "Mujibnagar", "district": "Meherpur", "division": "Khulna", "type": "historical", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 1000, "durationMin": 1, "durationMax": 1, "rating": 4.2, "reviewCount": 260, "description": "Site of the 1971 provisional government proclamation.", "highlights": ["Memorial complex"]}, {"name": "Rabindra Kuthibari", "location": "Shilaidaha", "district": "Kushtia", "division": "Khulna", "type": "cultural", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 1300, "durationMin": 1, "durationMax": 2, "rating": 4.4, "reviewCount": 580, "description": "Tagore's country house on the Padma where many songs and poems were written.", "highlights": ["Kuthibari museum", "River Padma"]}, {"name": "Jatiyo Sriti Shoudho", "location": "Savar", "district": "Dhaka", "division": "Dhaka", "type": "historical", "season": "Winter", "seasons": ["Winter", "Autumn", "Spring", "Late Autumn"], "priceFrom": 500, "durationMin": 1, "durationMax": 1, "rating": 4.6, "reviewCount": 3200, "description": "National Martyrs' Memorial commemorating the Liberation War.", "highlights": ["Memorial monument"]}, {"name": "Sundarbans Mongla Gateway", "location": "Mongla", "district": "Bagerhat", "division": "Khulna", "type": "wildlife", "season": "Winter", "seasons": ["Winter", "Late Autumn"], "priceFrom": 4000, "durationMin": 2, "durationMax": 4, "rating": 4.5, "reviewCount": 700, "description": "Primary launch point for multi-day Sundarbans boat expeditions.", "highlights": ["Jetty", "Boat safari start"]}, {"name": "Sixty Dome Mosque", "location": "Bagerhat", "district": "Bagerhat", "division": "Khulna", "type": "historical", "season": "Winter", "seasons": ["Winter", "Late Autumn", "Spring"], "priceFrom": 900, "durationMin": 1, "durationMax": 1, "rating": 4.7, "reviewCount": 1400, "description": "UNESCO listed Shait Gumbad Mosque of Khan Jahan Ali.", "highlights": ["Shait Gumbad", "Khan Jahan tomb"]}, {"name": "Tangail Saree Villages", "location": "Delduar / Kalihati", "district": "Tangail", "division": "Dhaka", "type": "cultural", "season": "Winter", "seasons": ["Winter", "Autumn", "Spring"], "priceFrom": 1400, "durationMin": 1, "durationMax": 2, "rating": 4.1, "reviewCount": 190, "description": "Handloom villages producing famous Tangail cotton sarees.", "highlights": ["Handloom demos", "Local markets"]}, {"name": "Netrokona Durgapur", "location": "Durgapur", "district": "Netrokona", "division": "Mymensingh", "type": "hill", "season": "Winter", "seasons": ["Winter", "Spring"], "priceFrom": 2200, "durationMin": 1, "durationMax": 3, "rating": 4.2, "reviewCount": 240, "description": "Birishiri hills, porcelain factory area and Someshwari river views near the Indian border.", "highlights": ["Birishiri", "Someshwari River"]}];
+
+const exploreState={
+  all:[],
+  season:'Winter',
+  types:['hill','beach','historical','cultural','wildlife','tea-garden'],
+  maxPrice:10000,
+  duration:'any',
+  q:'',
+  sort:'rating'
+};
+
+const session={
+  getToken:()=>localStorage.getItem('dv_token'),
+  getUser:()=>store.get('dv_user',null),
+  set:(token,user)=>{localStorage.setItem('dv_token',token);store.set('dv_user',user)},
+  clear:()=>{localStorage.removeItem('dv_token');store.remove('dv_user')}
+};
+async function apiRequest(path,options={}){
+  let res;
+  try{
+    res=await fetch(API_BASE+path,{
+      ...options,
+      headers:{'Content-Type':'application/json',...(session.getToken()?{Authorization:'Bearer '+session.getToken()}:{}),...(options.headers||{})}
+    });
+  }catch(err){
+    throw new Error('Could not reach the server. Is the backend running on '+API_BASE+'?');
+  }
+  let data={};
+  try{data=await res.json()}catch{/* no JSON body */}
+  if(!res.ok){
+    const err=new Error(data.message||'Something went wrong. Please try again.');
+    err.status=res.status;
+    err.data=data;
+    if(data.requiresVerification) err.requiresVerification=true;
+    if(data.email) err.email=data.email;
+    throw err;
+  }
+  return data;
+}
+
+function toast(m){let t=$('#app-toast');if(!t){t=document.createElement('div');t.id='app-toast';t.className='toast';document.body.append(t)}t.textContent=m;t.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove('show'),2500)}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function user(){return session.getUser()}
+function modal(mode='login', opts={}){
+  const defaultRole = opts.role || 'traveler';
+  let m=$('#auth-modal');if(!m){m=document.createElement('div');m.id='auth-modal';m.className='modal-backdrop';document.body.append(m)}
+  const eyeOpen=`<svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  const eyeOff=`<svg class="icon" viewBox="0 0 24 24"><path d="M17.94 17.94A10.9 10.9 0 0112 19c-7 0-11-7-11-7a21.8 21.8 0 015.06-5.94M9.9 4.24A10.9 10.9 0 0112 5c7 0 11 7 11 7a21.8 21.8 0 01-2.16 3.19M1 1l22 22M14.12 14.12a3 3 0 11-4.24-4.24"/></svg>`;
+  const pwField=`<div class="form-group"><label>Password</label><div class="pw-wrap"><input class="form-input" type="password" name="password" minlength="6" required autocomplete="${mode==='signup'?'new-password':'current-password'}"><button type="button" class="pw-toggle" aria-label="Show password" title="Show password">${eyeOpen}</button></div>${mode==='signup'?'<div style="font-size:11px;color:var(--ink-soft);margin-top:5px">At least 6 characters.</div>':''}</div>`;
+  /* Sign up is role-locked: regular Sign up = traveler only; Register as Provider = provider only. No role switcher. */
+  const title=mode==='signup'?(defaultRole==='provider'?'Register as a Provider':'Create your account'):'Welcome back';
+  const eyebrow=mode==='signup'&&defaultRole==='provider'?'Provider registration':'Desh Vromon Account';
+  m.innerHTML=`<div class="auth-modal"><div class="modal-head"><div><div class="eyebrow" style="color:var(--teal)">${eyebrow}</div><h3>${title}</h3></div><button class="close-modal" type="button" aria-label="Close">×</button></div>
+    <form id="auth-form">
+      ${mode==='signup'?`<div class="form-group"><label>Full name</label><input class="form-input" name="name" required autocomplete="name" placeholder="Your full name"></div><input type="hidden" name="role" value="${defaultRole==='provider'?'provider':'traveler'}">`:''}
+      <div class="form-group"><label>Email</label><input class="form-input" type="email" name="email" required autocomplete="email" placeholder="you@example.com"></div>
+      ${pwField}
+      <div id="auth-error" style="display:none;font-size:12.5px;color:var(--brick);font-weight:600;margin-bottom:10px"></div>
+      <button class="btn btn-primary" style="width:100%" type="submit">${mode==='signup'?(defaultRole==='provider'?'Create Provider Account':'Create Account'):'Log in'}</button>
+    </form>
+    <div style="margin-top:14px;font-size:12px;color:var(--ink-soft)">${mode==='signup'?'Already have an account?':'New to Desh Vromon?'} <button class="form-switch" id="switch-auth" type="button">${mode==='signup'?'Log in':'Create an account'}</button></div>
+  </div>`;
+  m.classList.add('open');
+  m.onclick=e=>{if(e.target===m)m.classList.remove('open')};
+  $('.close-modal',m).onclick=()=>m.classList.remove('open');
+  /* Switch: signup→login keeps no role; login→signup always opens traveler signup (provider uses dedicated CTA) */
+  $('#switch-auth',m).onclick=()=>modal(mode==='signup'?'login':'signup', mode==='signup'?{}:{role:'traveler'});
+
+  // Password show / hide
+  const pwInput=$('input[name="password"]',m);
+  const pwBtn=$('.pw-toggle',m);
+  if(pwBtn&&pwInput){
+    pwBtn.onclick=()=>{
+      const show=pwInput.type==='password';
+      pwInput.type=show?'text':'password';
+      pwBtn.innerHTML=show?eyeOff:eyeOpen;
+      pwBtn.setAttribute('aria-label',show?'Hide password':'Show password');
+      pwBtn.title=show?'Hide password':'Show password';
+    };
+  }
+
+  const showErr=msg=>{const el=$('#auth-error',m);if(el){el.textContent=msg;el.style.display='block'}};
+  const form=$('#auth-form',m),submitBtn=$('button[type="submit"]',form);
+  form.onsubmit=async e=>{
+    e.preventDefault();
+    let d=Object.fromEntries(new FormData(e.currentTarget));
+    d.name=(d.name||'').trim();d.email=(d.email||'').trim().toLowerCase();
+    if(mode==='signup'&&!d.role)d.role=defaultRole;
+    const emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email);
+    if(mode==='signup'&&!d.name)return showErr('Please enter your full name.');
+    if(!emailOk)return showErr('Please enter a valid email address.');
+    if(!d.password||d.password.length<6)return showErr('Password must be at least 6 characters.');
+    const originalLabel=submitBtn.textContent;
+    submitBtn.disabled=true;submitBtn.textContent='Please wait…';
+    try{
+      if(mode==='signup'){
+        const data=await apiRequest('/auth/signup',{method:'POST',body:JSON.stringify(d)});
+        if(data.requiresVerification){
+          showOtpModal({ email: data.email || d.email, devOtp: data.devOtp });
+          return;
+        }
+        if(data.token&&data.user) finishAuth(data, true);
+      } else {
+        const data=await apiRequest('/auth/login',{method:'POST',body:JSON.stringify({email:d.email,password:d.password})});
+        if(data.requiresVerification){
+          showOtpModal({ email: data.email || d.email });
+          return;
+        }
+        finishAuth(data, false);
+      }
+    }catch(err){
+      if(err.requiresVerification||(err.message&&/verify/i.test(err.message))){
+        showOtpModal({ email: err.email||d.email });
+      } else {
+        showErr(err.message);
+      }
+    }finally{
+      submitBtn.disabled=false;submitBtn.textContent=originalLabel;
+    }
+  };
+  setTimeout(()=>{
+    const first=$('input[name="name"]',m)||$('input[name="email"]',m);
+    if(first)first.focus();
+  },50);
+}
+
+function finishAuth(data, isSignup){
+  if(!data||!data.token||!data.user) return;
+  session.set(data.token, data.user);
+  const m=$('#auth-modal');
+  if(m) m.classList.remove('open');
+  const om=$('#otp-modal');
+  if(om) om.classList.remove('open');
+  toast(isSignup
+    ?(data.user.role==='provider'?'Provider account verified. Welcome!':'Email verified — account ready!')
+    :('Welcome back, '+data.user.name+'!'));
+  authUI();
+  bindGlobalActions();
+  if(data.user.role==='provider'){pendingTab='t6';}
+  else if(data.user.role==='traveler'&&pendingTab==='t6'){pendingTab='t5';}
+  goToPendingTab();
+  if(data.user.role==='provider'){initProviderDashboard();tab('t6');}
+  if(data.user.role==='traveler'){initTravelerDashboard();loadMyBookings();if(typeof loadMyTripPlans==='function')loadMyTripPlans();}
+}
+
+function showOtpModal({ email, devOtp }={}){
+  let m=$('#otp-modal');
+  if(!m){m=document.createElement('div');m.id='otp-modal';m.className='modal-backdrop';document.body.append(m)}
+  const authM=$('#auth-modal');
+  if(authM) authM.classList.remove('open');
+  m.innerHTML=`<div class="auth-modal" style="max-width:420px">
+    <div class="modal-head"><div><div class="eyebrow" style="color:var(--teal)">Email verification</div><h3>Enter OTP</h3></div>
+      <button class="close-modal" type="button" aria-label="Close">×</button></div>
+    <p style="font-size:13px;color:var(--ink-soft);line-height:1.55;margin-bottom:14px">
+      We sent a 6-digit code to <b>${esc(email||'')}</b>. Enter it below to verify your email.
+    </p>
+    ${devOtp?`<div style="font-size:12.5px;background:var(--teal-light);padding:10px 12px;border-radius:10px;margin-bottom:14px;line-height:1.5">
+      <b>Demo OTP:</b> <span class="mono" style="font-size:16px;letter-spacing:.12em">${esc(devOtp)}</span><br>
+      <span style="color:var(--ink-soft)">(Shown because email SMTP is not configured — also printed in backend console)</span>
+    </div>`:''}
+    <form id="otp-form">
+      <div class="form-group"><label>OTP code</label>
+        <input class="form-input" id="otp-input" name="otp" inputmode="numeric" autocomplete="one-time-code"
+          maxlength="6" pattern="[0-9]{6}" placeholder="6-digit code" required
+          style="letter-spacing:.2em;font-size:18px;font-weight:700;text-align:center">
+      </div>
+      <div id="otp-error" style="display:none;font-size:12.5px;color:var(--brick);font-weight:600;margin-bottom:10px"></div>
+      <button class="btn btn-primary" style="width:100%" type="submit" id="otp-submit-btn">Verify email</button>
+    </form>
+    <div style="margin-top:14px;font-size:12px;color:var(--ink-soft);text-align:center">
+      Didn’t get the code?
+      <button class="form-switch" id="otp-resend" type="button">Resend OTP</button>
+    </div>
+  </div>`;
+  m.classList.add('open');
+  m.onclick=e=>{if(e.target===m)m.classList.remove('open')};
+  $('.close-modal',m).onclick=()=>m.classList.remove('open');
+
+  const showErr=msg=>{const el=$('#otp-error',m);if(el){el.textContent=msg;el.style.display='block'}};
+  const otpInput=$('#otp-input',m);
+  if(otpInput){
+    otpInput.focus();
+    otpInput.oninput=()=>{otpInput.value=otpInput.value.replace(/\D/g,'').slice(0,6)};
+  }
+
+  $('#otp-form',m).onsubmit=async e=>{
+    e.preventDefault();
+    const otp=($('#otp-input',m)?.value||'').trim();
+    if(!/^\d{6}$/.test(otp)) return showErr('Enter the 6-digit OTP.');
+    const btn=$('#otp-submit-btn',m);
+    const label=btn.textContent;
+    btn.disabled=true;btn.textContent='Verifying…';
+    try{
+      const data=await apiRequest('/auth/verify-otp',{method:'POST',body:JSON.stringify({email,otp})});
+      finishAuth(data, true);
+    }catch(err){
+      showErr(err.message||'Verification failed');
+    }finally{
+      btn.disabled=false;btn.textContent=label;
+    }
+  };
+
+  $('#otp-resend',m).onclick=async()=>{
+    const btn=$('#otp-resend',m);
+    btn.disabled=true;btn.textContent='Sending…';
+    try{
+      const data=await apiRequest('/auth/resend-otp',{method:'POST',body:JSON.stringify({email})});
+      toast(data.message||'OTP resent');
+      if(data.devOtp){
+        showOtpModal({ email, devOtp: data.devOtp });
+      }
+    }catch(err){
+      showErr(err.message||'Could not resend OTP');
+    }finally{
+      btn.disabled=false;btn.textContent='Resend OTP';
+    }
+  };
+}
+
+function bindDashNav(root){
+  if(!root) return;
+  const panels=$$('[data-dash-panel]', root);
+  const showSection=(sec)=>{
+    $$('[data-dash-section]', root).forEach(n=>{
+      n.classList.toggle('on', n.dataset.dashSection===sec);
+    });
+    if(panels.length){
+      panels.forEach(p=>{
+        const is=p.dataset.dashPanel===sec;
+        p.style.display=is?'':'none';
+      });
+      // overview is default if section missing
+      if(!panels.some(p=>p.dataset.dashPanel===sec)){
+        const ov=root.querySelector('[data-dash-panel="overview"]');
+        if(ov) ov.style.display='';
+      }
+    } else {
+      // traveler fallback: scroll
+      const map={
+        services: root.querySelector('[data-services-body]')?.closest('.panel'),
+        bookings: root.querySelector('[data-provider-bookings-body], [data-bookings-body]')?.closest('.panel'),
+        trips: root.querySelector('[data-trips-body], #my-trip-plans')?.closest('.panel') || root.querySelector('[data-dash-panel="trips"]'),
+        earnings: root.querySelector('.bars')?.closest('.panel'),
+        profile: root.querySelector('[data-dash-panel="profile"]'),
+        overview: root.querySelector('[data-dash-panel="overview"]')
+      };
+      const target=map[sec];
+      if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  };
+  $$('[data-dash-section]', root).forEach(nav=>{
+    nav.onclick=()=>showSection(nav.dataset.dashSection);
+  });
+  $$('[data-dash-jump-btn]', root).forEach(a=>{
+    a.onclick=(e)=>{e.preventDefault();showSection(a.dataset.dashJumpBtn);};
+  });
+  // initial
+  const on=root.querySelector('[data-dash-section].on');
+  if(on) showSection(on.dataset.dashSection);
+  else if(panels.length) showSection('overview');
+}
+
+function setRoleClass(){
+  const u=user();
+  document.body.classList.remove('role-guest','role-traveler','role-provider');
+  if(!u) document.body.classList.add('role-guest');
+  else if(u.role==='provider') document.body.classList.add('role-provider');
+  else document.body.classList.add('role-traveler');
+}
+
+function renderNav(){
+  const u=user();
+  const links=$('#main-nav-links')||$('.nav-links');
+  if(!links) return;
+  // Top nav: Home · Explore · Plan a Trip · Booking · Dashboard · For Providers
+  let items=[];
+  if(u && u.role==='provider'){
+    items=[
+      {id:'t1',label:'Home'},
+      {id:'t6',label:'Workspace'},
+      {id:'t6',label:'My Services', section:'services'},
+      {id:'t6',label:'Bookings', section:'bookings'},
+      {id:'t6',label:'Dashboard', section:'overview'}
+    ];
+  } else {
+    items=[
+      {id:'t1',label:'Home'},
+      {id:'t2',label:'Explore'},
+      {id:'t3',label:'Plan a Trip'},
+      {id:'t4',label:'Booking'},
+      {id:'t5',label:'Dashboard'},
+      {id:'t6',label:'For Providers'}
+    ];
+  }
+  const curr=document.querySelector('.frame-wrap.active')?.id||'t1';
+  links.innerHTML=items.map(it=>`<a data-tab-link="${it.id}" ${it.section?`data-dash-jump="${it.section}"`:''} class="${it.id===curr?'curr':''}">${it.label}</a>`).join('');
+  $$('[data-tab-link]', links).forEach(el=>{
+    el.onclick=e=>{
+      e.preventDefault();
+      const id=el.dataset.tabLink;
+      // "For Providers" for non-providers: open provider registration instead of workspace
+      if(id==='t6' && (!u || u.role!=='provider')){
+        modal('signup',{role:'provider'});
+        closeMobileNav();
+        return;
+      }
+      tab(id);
+      const jump=el.dataset.dashJump;
+      if(jump){
+        setTimeout(()=>{
+          const side=id==='t6'?$('#t6 .dash-side'):$('#t5 .dash-side');
+          const nav=side&&$(`[data-dash-section="${jump}"]`,side);
+          if(nav) nav.click();
+        },50);
+      }
+      closeMobileNav();
+    };
+  });
+}
+
+function authUI(){
+  const u=user();
+  setRoleClass();
+  renderNav();
+  $$('.auth-area').forEach(n=>{
+    if(!u){
+      n.innerHTML=`<button class="btn btn-outline-light btn-sm login-btn" type="button">Log in</button><button class="btn btn-primary btn-sm signup-btn" type="button">Sign up</button>`;
+    } else {
+      const initial=(u.name||u.email||'U').trim().charAt(0).toUpperCase();
+      /* Compact account menu (~3 lines): dashboard/workspace, profile, log out */
+      const menuItems = u.role==='provider' ? `
+        <a data-tab-link="t6" data-dash-jump="overview">Provider workspace</a>
+        <a data-tab-link="t6" data-dash-jump="profile">Profile</a>
+        <button type="button" class="ad-item ad-danger logout-btn">Log out</button>
+      ` : `
+        <a data-tab-link="t5" data-dash-jump="overview">My dashboard</a>
+        <a data-tab-link="t5" data-dash-jump="profile">Profile</a>
+        <button type="button" class="ad-item ad-danger logout-btn">Log out</button>
+      `;
+      n.innerHTML=`<div class="account-menu">
+        <button type="button" class="account-trigger" id="account-menu-btn" aria-haspopup="true" aria-expanded="false">
+          <span class="account-avatar">${esc(initial)}</span>
+          <span class="account-name" style="max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(u.name||'Account')}</span>
+          <span class="hamburger-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+        <div class="account-dropdown" id="account-dropdown">
+          <div class="ad-head"><div class="nm">${esc(u.name||u.email)}</div><div class="rl">${esc(u.role||'traveler')}</div></div>
+          ${menuItems}
+        </div>
+      </div>`;
+    }
+  });
+  $$('.login-btn').forEach(b=>b.onclick=()=>modal('login'));
+  $$('.signup-btn').forEach(b=>b.onclick=()=>modal('signup',{role:'traveler'}));
+  $$('.logout-btn').forEach(b=>b.onclick=()=>{session.clear();toast('You have been logged out.');location.reload()});
+
+  const btn=$('#account-menu-btn');
+  const dd=$('#account-dropdown');
+  if(btn&&dd){
+    btn.onclick=e=>{
+      e.stopPropagation();
+      const open=dd.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open?'true':'false');
+    };
+    $$('#account-dropdown [data-tab-link]').forEach(a=>{
+      a.onclick=e=>{
+        e.preventDefault();
+        dd.classList.remove('open');
+        const id=a.dataset.tabLink;
+        tab(id);
+        const jump=a.dataset.dashJump;
+        if(jump){
+          setTimeout(()=>{
+            const root=id==='t6'?$('#t6'):$('#t5');
+            const nav=root&&$(`[data-dash-section="${jump}"]`,root);
+            if(nav) nav.click();
+          },60);
+        }
+      };
+    });
+  }
+  if(!window.__accountMenuBound){
+    window.__accountMenuBound=true;
+    document.addEventListener('click', closeAccountMenuOnce);
+  }
+}
+
+function closeAccountMenuOnce(e){
+  const dd=$('#account-dropdown');
+  const btn=$('#account-menu-btn');
+  if(!dd||!dd.classList.contains('open')) return;
+  if(e.target.closest('.account-menu')) return;
+  dd.classList.remove('open');
+  if(btn) btn.setAttribute('aria-expanded','false');
+}
+
+function closeMobileNav(){
+  const links=$('.nav-links'), btn=$('#menuToggle');
+  if(links) links.classList.remove('mobile-open');
+  if(btn) btn.setAttribute('aria-expanded','false');
+}
+
+
+/* On page load, double-check the saved token is still valid against the backend
+   (catches an expired/invalid token instead of trusting stale localStorage data). */
+async function verifySession(){
+  if(!session.getToken())return;
+  try{
+    const data=await apiRequest('/auth/me');
+    store.set('dv_user',data.user);
+  }catch(err){
+    session.clear();
+  }
+}
+
+/* ===== Page navigation with Role-Based Access Control (FR-04) ===== */
+const restrictedPages={t5:null,t6:'provider'}; // t5: any logged-in user · t6: providers only
+let pendingTab=null;
+function canEnter(id){
+  if(!(id in restrictedPages))return true;
+  const u=user();
+  if(!u)return false;
+  const requiredRole=restrictedPages[id];
+  return !requiredRole || u.role===requiredRole;
+}
+function goToPendingTab(){if(pendingTab){const t=pendingTab;pendingTab=null;tab(t);}}
+function tab(id){
+  const u=user();
+  // Guests cannot open dashboards
+  if((id==='t5'||id==='t6')&&!u){
+    toast('Please log in to access your dashboard.');
+    modal('login');
+    return;
+  }
+  // Providers stay in provider workspace — no traveler booking dashboards / trip planner primary flows
+  if(u&&u.role==='provider'){
+    if(id==='t5'||id==='t3'||id==='t4'){
+      id='t6';
+      toast('Provider workspace: manage services & booking requests.');
+    }
+  }
+  // Travelers cannot open provider dashboard
+  if(u&&u.role==='traveler'&&id==='t6'){
+    id='t5';
+    toast('Switch to a provider account to open the provider workspace.');
+  }
+  $$('.frame-wrap').forEach(f=>f.classList.toggle('active',f.id===id));
+  $$('[data-tab-link]').forEach(el=>el.classList.toggle('curr',el.dataset.tabLink===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='t2'&&typeof loadDestinations==='function')loadDestinations();
+  if(id==='t4'){if(typeof loadAccommodations==='function')loadAccommodations();if(typeof refreshBookingSummary==='function')refreshBookingSummary();}
+  if(id==='t5'&&typeof initTravelerDashboard==='function')initTravelerDashboard();
+  if(id==='t6'&&typeof initProviderDashboard==='function')initProviderDashboard();
+  closeMobileNav();
+  const dd=$('#account-dropdown'); if(dd) dd.classList.remove('open');
+}
+
+// Event delegation so dynamically rendered nav links always work
+if(!window.__tabLinkDelegation){
+  window.__tabLinkDelegation=true;
+  document.addEventListener('click',e=>{
+    const el=e.target.closest('[data-tab-link]');
+    if(!el) return;
+    // account dropdown / renderNav may handle their own; still safe to call tab
+    if(el.closest('#account-dropdown')) return; // handled in authUI
+    if(el.closest('#main-nav-links')) return; // handled in renderNav
+    e.preventDefault();
+    tab(el.dataset.tabLink);
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    const el=e.target.closest('[data-tab-link]');
+    if(!el) return;
+    e.preventDefault();
+    tab(el.dataset.tabLink);
+  });
+}
+
+/* ===== Plan a Trip — full functional generator ===== */
+function daysBetween(start, end){
+  const a=new Date(start), b=new Date(end);
+  if(Number.isNaN(a)||Number.isNaN(b)||b<a)return 1;
+  return Math.max(1, Math.round((b-a)/86400000)+1);
+}
+function buildItineraryDays(destination, style, interests, numDays){
+  const interestSet=new Set(interests||[]);
+  const templates={
+    Nature:[
+      {time:'08:00 — Morning', title:'Scenic viewpoint', desc:'Morning light at the best overlook near '+destination+'.'},
+      {time:'12:30 — Afternoon', title:'Nature trail', desc:'Guided walk through local trails and quiet spots.'},
+      {time:'17:30 — Evening', title:'Sunset stop', desc:'Catch sunset and return for a relaxed dinner.'}
+    ],
+    Adventure:[
+      {time:'07:00 — Morning', title:'Adventure start', desc:'Trek / jeep / active outing around '+destination+'.'},
+      {time:'13:00 — Afternoon', title:'Challenge activity', desc:'Continue with a longer activity matched to your fitness.'},
+      {time:'19:00 — Evening', title:'Campfire recovery', desc:'Local dinner and rest for the next day.'}
+    ],
+    Relaxation:[
+      {time:'09:00 — Morning', title:'Slow morning', desc:'Leisure breakfast and easy lakeside or garden time.'},
+      {time:'14:00 — Afternoon', title:'Spa of nature', desc:'Short walk, photography, or rest at the stay.'},
+      {time:'18:00 — Evening', title:'Quiet evening', desc:'Sunset and early dinner — no rush.'}
+    ],
+    Culture:[
+      {time:'09:00 — Morning', title:'Heritage visit', desc:'Museum, temple, or cultural landmark near '+destination+'.'},
+      {time:'13:30 — Afternoon', title:'Local neighbourhood', desc:'Markets, crafts, and conversations with locals.'},
+      {time:'18:30 — Evening', title:'Cultural dinner', desc:'Traditional meal and optional performance or walk.'}
+    ],
+  };
+  const base=templates[style]||templates.Nature;
+  const days=[];
+  for(let i=1;i<=numDays;i++){
+    let items=base.map(x=>({time:x.time, title:x.title, description:x.desc}));
+    if(i===1){
+      items=[{time:'09:00 — Morning', title:'Arrival & check-in', description:'Travel to '+destination+' and settle into your stay.'}, ...items.slice(1)];
+    }
+    if(i===numDays && numDays>1){
+      items=[items[0], {time:'14:00 — Afternoon', title:'Departure', description:'Checkout and return journey from '+destination+'.'}];
+    }
+    if(interestSet.has('Local cuisine')){
+      items.push({time:'20:00 — Night', title:'Food stop', description:'Try regional specialties recommended by locals.'});
+    }
+    if(interestSet.has('Photography spots') && i===Math.ceil(numDays/2)){
+      items.splice(1,0,{time:'11:00 — Late morning', title:'Photo walk', description:'Golden-hour practice spots curated for '+destination+'.'});
+    }
+    if(interestSet.has('Boat rides')){
+      items.push({time:'15:30 — Afternoon', title:'Boat experience', description:'River, lake, or sea ride depending on the destination.'});
+    }
+    if(interestSet.has('Cultural sites') && style!=='Culture'){
+      items.push({time:'16:30 — Afternoon', title:'Cultural stop', description:'Short visit to a nearby heritage or community site.'});
+    }
+    if(interestSet.has('Hiking & viewpoints') && style==='Nature'){
+      /* already covered */
+    }
+    days.push({dayNumber:i, items});
+  }
+  return days;
+}
+function renderItineraryDay(day){
+  const tl=$('.itin-main .tl')||$('.tl');
+  if(!tl)return;
+  if(!day){tl.innerHTML='<div style="padding:20px;color:var(--ink-soft)">Generate an itinerary to see the day plan.</div>';return;}
+  tl.innerHTML=day.items.map(it=>`
+    <div class="tl-item">
+      <div class="tl-time">${esc(it.time)}</div>
+      <div class="tl-card">
+        <div><h4>${esc(it.title)}</h4><p>${esc(it.description)}</p></div>
+        <div class="tl-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2l2.4 6.9L21 11l-6.6 2.1L12 20l-2.4-6.9L3 11l6.6-2.1z"/></svg></div>
+      </div>
+    </div>`).join('');
+}
+function renderDayTabs(days, active=1){
+  const wrap=$('.day-tabs');
+  if(!wrap)return;
+  wrap.innerHTML=days.map(d=>`<div class="day-tab${d.dayNumber===active?' on':''}" data-day="${d.dayNumber}">Day ${d.dayNumber}</div>`).join('');
+  $$('.day-tab',wrap).forEach(tabEl=>{
+    tabEl.onclick=()=>{
+      $$('.day-tab',wrap).forEach(t=>t.classList.remove('on'));
+      tabEl.classList.add('on');
+      const n=Number(tabEl.dataset.day);
+      const day=days.find(x=>x.dayNumber===n);
+      renderItineraryDay(day);
+    };
+  });
+}
+function initPlanner(){
+  // default dates: today + 3 days
+  const start=$('#plan-start'), end=$('#plan-end');
+  const today=new Date();
+  const iso=d=>d.toISOString().slice(0,10);
+  if(start && !start.value){
+    start.value=iso(today);
+    const e=new Date(today);e.setDate(e.getDate()+2);
+    if(end)end.value=iso(e);
+  }
+  $$('#plan-styles .style-chip').forEach(chip=>{
+    chip.onclick=()=>{
+      $$('#plan-styles .style-chip').forEach(c=>c.classList.remove('on'));
+      chip.classList.add('on');
+    };
+  });
+  $$('.plan-interest').forEach(row=>{
+    row.onclick=()=>$('.box',row)?.classList.toggle('on');
+  });
+  const btn=$('#generate-itin-btn');
+  if(!btn)return;
+  btn.onclick=async()=>{
+    const destination=($('#plan-destination')?.value||'Sajek Valley').trim();
+    const startVal=$('#plan-start')?.value;
+    const endVal=$('#plan-end')?.value;
+    const travelers=Number($('#plan-travelers')?.value||2);
+    const budget=Number($('#plan-budget')?.value||15000);
+    const style=$('#plan-styles .style-chip.on')?.dataset.style||'Nature';
+    const interests=$$('.plan-interest').filter(r=>$('.box',r)?.classList.contains('on')).map(r=>r.dataset.interest);
+    if(!startVal||!endVal){toast('Please select start and end dates.');return;}
+    if(new Date(endVal)<new Date(startVal)){toast('End date must be after start date.');return;}
+    const numDays=daysBetween(startVal, endVal);
+    if(numDays>14){toast('Please choose a trip of 14 days or fewer.');return;}
+    const days=buildItineraryDays(destination, style, interests, numDays);
+    window.__lastPlan={destination, startDate:startVal, endDate:endVal, travelers, budget, style, interests, days};
+    const h=$('.itin-top h3'), p=$('.itin-top p');
+    if(h)h.textContent=`${numDays}-day plan · ${destination}`;
+    if(p)p.textContent=`Generated for ${travelers} traveler${travelers>1?'s':''} · ${style}${interests.length?' · '+interests.slice(0,2).join(', '):''} · Budget ৳${budget.toLocaleString()}`;
+    renderDayTabs(days, 1);
+    renderItineraryDay(days[0]);
+    // budget panel if present
+    const total=$('.itin-main .mono, .sum-total .mono');
+    store.set('dv_itinerary',{...window.__lastPlan, generatedAt:new Date().toISOString()});
+    toast(`${numDays}-day itinerary ready for ${destination}. Open Booking to book.`);
+    if(typeof refreshBookingSummary==='function')refreshBookingSummary();
+    if(user()){
+      try{
+        const payload={destination, startDate:startVal, endDate:endVal, travelers, budget, style, days,
+          budgetBreakdown:{transportation:Math.round(budget*0.2), accommodation:Math.round(budget*0.4), food:Math.round(budget*0.25), activities:Math.round(budget*0.15)}};
+        await apiRequest('/tripplans',{method:'POST',body:JSON.stringify(payload)});
+        toast('Itinerary saved to your account.');
+      }catch(e){/* local already saved */}
+    }
+  };
+}
+
+const DEST_THEME={
+  hill:{cls:'m2',icon:'M2 20l6-11 4 7 3-5 7 9H2z'},
+  beach:{cls:'m3',icon:'M4 20l4-8 3 4 3-6 6 10H4z'},
+  wildlife:{cls:'m1',icon:'M3 18c2-3 4-3 6 0s4 3 6 0 4-3 6 0M4 12l4-8 4 8 4-8 4 8'},
+  'tea-garden':{cls:'m5',icon:'M12 3c3 3 3 7 0 10-3-3-3-7 0-10zM12 13v8M8 21h8'},
+  historical:{cls:'m6',icon:'M3 12h18M6 12V7a6 6 0 0112 0v5'},
+  cultural:{cls:'m4',icon:'M4 20l4-8 3 4 3-6 6 10H4z'}
+};
+function destMatchesSeason(d, season){
+  if(!season||season==='All')return true;
+  if(d.season===season)return true;
+  if(Array.isArray(d.seasons)&&d.seasons.includes(season))return true;
+  return false;
+}
+function destMatchesDuration(d, duration){
+  if(!duration||duration==='any')return true;
+  const min=d.durationMin||1, max=d.durationMax||min;
+  if(duration==='1-2')return min<=2;
+  if(duration==='3-5')return max>=3&&min<=5;
+  if(duration==='7+')return max>=7;
+  return true;
+}
+function filterDestinationsLocal(){
+  const q=(exploreState.q||'').trim().toLowerCase();
+  let list=(exploreState.all||[]).filter(d=>{
+    if(!destMatchesSeason(d, exploreState.season))return false;
+    if(exploreState.types.length && !exploreState.types.includes(d.type))return false;
+    if(exploreState.maxPrice && (d.priceFrom||0)>exploreState.maxPrice)return false;
+    if(!destMatchesDuration(d, exploreState.duration))return false;
+    if(q){
+      const hay=[d.name,d.location,d.district,d.division,d.description,(d.highlights||[]).join(' ')].join(' ').toLowerCase();
+      if(!hay.includes(q))return false;
+    }
+    return true;
+  });
+  list=list.slice().sort((a,b)=>(b.rating||0)-(a.rating||0));
+  return list;
+}
+function destCardHTML(d){
+  const theme=DEST_THEME[d.type]||DEST_THEME.hill;
+  const stars='★'.repeat(Math.round(d.rating||4.5))+'☆'.repeat(Math.max(0,5-Math.round(d.rating||4.5)));
+  const typeLabel=(d.type||'hill').replace('-',' ');
+  const dur=(d.durationMin&&d.durationMax)?(d.durationMin===d.durationMax?d.durationMin+'d':d.durationMin+'-'+d.durationMax+'d'):'';
+  return `<div class="xcard${d.isFavorite?' fav':''}" data-dest-id="${d._id||d.name}" data-name="${esc(d.name)}">
+    <div class="media ${theme.cls}">
+      <div class="heart" title="Favorite"><svg class="icon" style="width:13px;height:13px;color:var(--brick)" viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.3-9A5.4 5.4 0 0112 6.2 5.4 5.4 0 0121.3 12c-2.3 4.5-9.3 9-9.3 9z"/></svg></div>
+      <svg class="icon" viewBox="0 0 24 24"><path d="${theme.icon}"/></svg>
+    </div>
+    <div class="body">
+      <div class="row1"><h4>${esc(d.name)}</h4><span class="pill pill-teal">${esc(typeLabel)}</span></div>
+      <div class="loc" style="font-size:12px;color:var(--ink-soft)">${esc(d.location||'')}${d.district?', '+esc(d.district):''}</div>
+      <div class="stars" style="margin:8px 0">${stars} <span style="color:var(--ink-soft);font-weight:400">${(d.rating||4.5).toFixed(1)}</span></div>
+      <div style="font-size:12px;color:var(--ink-soft);line-height:1.45;margin-bottom:8px">${esc((d.description||'').slice(0,90))}${(d.description||'').length>90?'…':''}</div>
+      <div class="dest-foot"><span class="price">From <b>৳${(d.priceFrom||0).toLocaleString()}</b>${dur?' · '+dur:''}</span>
+      <button class="btn btn-ghost btn-sm dest-plan-btn" type="button">Plan trip</button></div>
+    </div>
+  </div>`;
+}
+function renderExploreGrid(list){
+  const grid=$('#explore-grid');
+  if(!grid)return;
+  const count=$('#explore-count');
+  if(count)count.innerHTML=`${list.length} result${list.length===1?'':'s'} · Sort by <b style="color:var(--ink)">Recommended</b>`;
+  if(!list.length){
+    grid.innerHTML='<div style="grid-column:1/-1;padding:40px 20px;text-align:center;color:var(--ink-soft)">No destinations match your filters. Try resetting filters or clearing search.</div>';
+    return;
+  }
+  grid.innerHTML=list.map(destCardHTML).join('');
+  bindDestinationHearts();
+  $$('.dest-plan-btn',grid).forEach(btn=>{
+    btn.onclick=e=>{
+      e.stopPropagation();
+      const card=btn.closest('.xcard');
+      const name=card?.dataset.name||'Sajek Valley';
+      const sel=$('#plan-destination');
+      if(sel){
+        // ensure option exists
+        let found=[...sel.options].some(o=>o.value===name||o.textContent===name);
+        if(!found){const opt=document.createElement('option');opt.value=name;opt.textContent=name;sel.append(opt);}
+        sel.value=name;
+      }
+      tab('t3');
+      toast('Planning a trip to '+name);
+    };
+  });
+}
+function bindDestinationHearts(){
+  $$('#explore-grid .heart').forEach(h=>{
+    h.onclick=async e=>{
+      e.stopPropagation();
+      if(!user()){modal('login');return toast('Please log in to save favorites.');}
+      const card=h.closest('.xcard');
+      const id=card?.dataset.destId;
+      if(!id||id.length<8){card.classList.toggle('fav');return;}
+      try{
+        const data=await apiRequest('/destinations/'+id+'/favorite',{method:'POST'});
+        card.classList.toggle('fav', !!data.isFavorite);
+        toast(data.isFavorite?'Added to favorites':'Removed from favorites');
+      }catch(err){toast(err.message)}
+    };
+  });
+}
+function readExploreFiltersFromUI(){
+  const onSeason=$('#season-chips .chip.on');
+  exploreState.season=onSeason?.dataset.season||'All';
+  exploreState.types=$$('#type-checks .check-row').filter(r=>$('.box',r)?.classList.contains('on')).map(r=>r.dataset.type).filter(Boolean);
+  const range=$('#budget-range');
+  exploreState.maxPrice=range?Number(range.value):10000;
+  const onDur=$('#duration-chips .chip.on');
+  exploreState.duration=onDur?.dataset.duration||'any';
+  exploreState.q=($('#explore-search')?.value||'').trim();
+}
+function applyExploreFilters(){
+  readExploreFiltersFromUI();
+  renderExploreGrid(filterDestinationsLocal());
+}
+async function loadDestinations(opts={}){
+  if(opts.season){
+    exploreState.season=opts.season;
+    // sync UI chips
+    $$('#season-chips .chip').forEach(c=>c.classList.toggle('on',c.dataset.season===opts.season));
+  }
+  try{
+    const data=await apiRequest('/destinations');
+    if(data.destinations&&data.destinations.length){
+      exploreState.all=data.destinations;
+    }else{
+      exploreState.all=FALLBACK_DESTINATIONS.map((d,i)=>({...d,_id:'local-'+i}));
+    }
+  }catch(err){
+    console.warn('API destinations unavailable, using built-in list', err.message);
+    exploreState.all=FALLBACK_DESTINATIONS.map((d,i)=>({...d,_id:'local-'+i}));
+  }
+  // populate planner destination select
+  const sel=$('#plan-destination');
+  if(sel){
+    const names=[...new Set(exploreState.all.map(d=>d.name))].sort();
+    const current=sel.value;
+    sel.innerHTML=names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+    if(names.includes(current))sel.value=current;
+  }
+  applyExploreFilters();
+}
+function initExploreFilters(){
+  $$('#season-chips .chip').forEach(chip=>{
+    chip.onclick=()=>{
+      $$('#season-chips .chip').forEach(c=>c.classList.remove('on'));
+      chip.classList.add('on');
+      applyExploreFilters();
+    };
+  });
+  $$('#type-checks .check-row').forEach(row=>{
+    row.onclick=()=>{
+      const box=$('.box',row);
+      if(box)box.classList.toggle('on');
+      applyExploreFilters();
+    };
+  });
+  $$('#duration-chips .chip').forEach(chip=>{
+    chip.onclick=()=>{
+      $$('#duration-chips .chip').forEach(c=>c.classList.remove('on'));
+      chip.classList.add('on');
+      applyExploreFilters();
+    };
+  });
+  const range=$('#budget-range');
+  const label=$('#budget-label');
+  if(range){
+    const sync=()=>{if(label)label.textContent='Up to ৳'+Number(range.value).toLocaleString();applyExploreFilters();};
+    range.oninput=sync;
+  }
+  const search=$('#explore-search');
+  if(search){
+    let t;
+    search.oninput=()=>{clearTimeout(t);t=setTimeout(applyExploreFilters,180)};
+    search.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();applyExploreFilters();}};
+  }
+  const applyBtn=$('#apply-filters-btn');
+  if(applyBtn)applyBtn.onclick=()=>{applyExploreFilters();toast('Filters applied');};
+  const resetBtn=$('#reset-filters-btn');
+  if(resetBtn)resetBtn.onclick=()=>{
+    exploreState.season='All';exploreState.types=['hill','beach','historical','cultural','wildlife','tea-garden'];
+    exploreState.maxPrice=10000;exploreState.duration='any';exploreState.q='';
+    $$('#season-chips .chip').forEach(c=>c.classList.toggle('on',c.dataset.season==='All'));
+    $$('#type-checks .check-row .box').forEach(b=>b.classList.add('on'));
+    $$('#duration-chips .chip').forEach(c=>c.classList.toggle('on',c.dataset.duration==='any'));
+    if(range)range.value=10000;
+    if(label)label.textContent='Up to ৳10,000';
+    if(search)search.value='';
+    applyExploreFilters();
+    toast('Filters reset');
+  };
+}
+
+
+/* ===== Booking: plan-linked summary, rooms, dummy payment ===== */
+const bookState = {
+  selected: null,
+  paymentMethod: 'bKash',
+  singleCount: 0,
+  doubleCount: 1
+};
+
+function getPlanTrip() {
+  const stored = store.get('dv_itinerary', null) || window.__lastPlan || null;
+  const start = $('#plan-start')?.value || stored?.startDate || '';
+  const end = $('#plan-end')?.value || stored?.endDate || '';
+  const travelers = Number($('#plan-travelers')?.value || stored?.travelers || 2);
+  const destination = $('#plan-destination')?.value || stored?.destination || 'Sajek Valley';
+  const style = $('#plan-styles .style-chip.on')?.dataset.style || stored?.style || 'Nature';
+  let nights = 1;
+  if (start && end) {
+    const a = new Date(start), b = new Date(end);
+    if (!Number.isNaN(a) && !Number.isNaN(b) && b > a) {
+      nights = Math.max(1, Math.round((b - a) / 86400000));
+    }
+  }
+  return { start, end, travelers, destination, style, nights, stored };
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function roomOfType(a, type) {
+  return (a?.rooms || []).find(r => r.type === type) || null;
+}
+
+function hotelCardHTML(a, selected) {
+  const mode = a.bookingMode || 'per-room';
+  const modeLabel = mode === 'whole-property' ? 'Entire property' : 'Per room';
+  const priceLabel = mode === 'whole-property'
+    ? `৳${Number(a.pricePerNight||0).toLocaleString()} <span class="per">whole / night</span>`
+    : `from ৳${Number(a.pricePerNight||0).toLocaleString()} <span class="per">/ room / night</span>`;
+  const singles = roomOfType(a, 'single');
+  const doubles = roomOfType(a, 'double');
+  let roomSummary = '';
+  if (mode === 'whole-property') {
+    roomSummary = (a.rooms || []).map(r => `${r.quantity}× ${r.name || r.type}`).join(' · ') || (a.totalRooms ? a.totalRooms + ' rooms' : '');
+  } else {
+    const bits = [];
+    if (singles) bits.push(`${singles.quantity} single`);
+    if (doubles) bits.push(`${doubles.quantity} double`);
+    roomSummary = bits.join(' · ') || (a.totalRooms ? a.totalRooms + ' rooms' : '');
+  }
+  return `<div class="hotel-card${selected ? ' sel' : ''}" data-id="${a._id}" data-name="${esc(a.name)}" data-price="${a.pricePerNight}" data-mode="${mode}">
+    <div class="hotel-media m1"><svg class="icon" style="width:30px;height:30px;color:rgba(255,255,255,.9)" viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 21v-6h6v6"/></svg></div>
+    <div class="hotel-body">
+      <div class="hotel-top"><h4 style="font-size:15px">${esc(a.name)}</h4><span class="stars">★ ${(a.rating||4.5).toFixed(1)}</span></div>
+      <div class="loc" style="font-size:12px;color:var(--ink-soft)">${esc(a.location||'')} · <b style="color:var(--teal)">${modeLabel}</b></div>
+      <div class="amenities">${(a.amenities||[]).slice(0,4).map(x=>`<span class="amenity">${esc(x)}</span>`).join('')}</div>
+      ${roomSummary ? `<div style="font-size:12px;color:var(--ink-soft);margin-top:6px">${esc(roomSummary)}</div>` : ''}
+      <div class="hotel-foot"><div><div class="price">${priceLabel}</div></div>${selected?'<span class="pill pill-teal">Selected</span>':'<button class="btn btn-ghost btn-sm" type="button">Select</button>'}</div>
+    </div>
+  </div>`;
+}
+
+function calcBookingTotals() {
+  const plan = getPlanTrip();
+  const a = bookState.selected;
+  if (!a) return { nights: plan.nights, roomNightPrice: 0, subtotal: 0, fee: 0, total: 0, roomsBooked: 0, roomLabel: '—', mode: 'per-room', singleCount: 0, doubleCount: 0 };
+
+  const nights = plan.nights || 1;
+  if ((a.bookingMode || 'per-room') === 'whole-property') {
+    const roomNightPrice = Number(a.pricePerNight) || 0;
+    const subtotal = roomNightPrice * nights;
+    const fee = Math.round(subtotal * 0.045);
+    const parts = (a.rooms || []).map(r => `${r.quantity}× ${r.name || r.type}`);
+    return {
+      nights, roomNightPrice, subtotal, fee, total: subtotal + fee,
+      roomsBooked: a.totalRooms || (a.rooms||[]).reduce((s,r)=>s+(r.quantity||0),0) || 1,
+      roomLabel: parts.length ? parts.join(', ') : 'Entire property',
+      mode: 'whole-property', singleCount: 0, doubleCount: 0
+    };
+  }
+
+  const single = roomOfType(a, 'single');
+  const dbl = roomOfType(a, 'double');
+  const sMax = single ? (single.quantity || 0) : 0;
+  const dMax = dbl ? (dbl.quantity || 0) : 0;
+  let sQty = Math.min(Math.max(0, Number(bookState.singleCount) || 0), sMax);
+  let dQty = Math.min(Math.max(0, Number(bookState.doubleCount) || 0), dMax);
+  if (sQty + dQty < 1) {
+    if (dMax > 0) dQty = 1;
+    else if (sMax > 0) sQty = 1;
+  }
+  const sPrice = single ? Number(single.pricePerNight) : 0;
+  const dPrice = dbl ? Number(dbl.pricePerNight) : Number(a.pricePerNight) || 0;
+  const roomNightPrice = sQty * sPrice + dQty * dPrice;
+  const subtotal = roomNightPrice * nights;
+  const fee = Math.round(subtotal * 0.045);
+  const labelParts = [];
+  if (sQty) labelParts.push(`${sQty}× Single`);
+  if (dQty) labelParts.push(`${dQty}× Double`);
+  return {
+    nights, roomNightPrice, subtotal, fee, total: subtotal + fee,
+    roomsBooked: sQty + dQty,
+    roomLabel: labelParts.join(' + ') || '—',
+    mode: 'per-room',
+    singleCount: sQty, doubleCount: dQty,
+    sPrice, dPrice, sMax, dMax
+  };
+}
+
+function showWholePropertyPopup(a) {
+  let m = $('#whole-prop-modal');
+  if (!m) {
+    m = document.createElement('div');
+    m.id = 'whole-prop-modal';
+    m.className = 'modal-backdrop';
+    document.body.append(m);
+  }
+  const rooms = a.rooms || [];
+  const lines = rooms.length
+    ? rooms.map(r => `<tr><td style="padding:6px 8px">${esc(r.name || r.type)}</td><td style="padding:6px 8px;text-transform:capitalize">${esc(r.type)}</td><td style="padding:6px 8px;text-align:center">${r.quantity}</td><td style="padding:6px 8px;text-align:center">sleeps ${r.capacity || '—'}</td></tr>`).join('')
+    : `<tr><td colspan="4" style="padding:8px">Entire property · ${a.totalRooms || 1} room(s) · max ${a.maxGuests || '—'} guests</td></tr>`;
+  m.innerHTML = `<div class="auth-modal" style="max-width:480px">
+    <div class="modal-head"><div><div class="eyebrow" style="color:var(--teal)">Whole property</div><h3>${esc(a.name)}</h3></div><button class="close-modal" type="button">×</button></div>
+    <p style="font-size:13px;color:var(--ink-soft);line-height:1.55;margin-bottom:14px">
+      This resort does not offer individual room selection. The <b>entire property</b> will be booked for your dates.
+    </p>
+    <p style="font-size:13px;line-height:1.55;margin-bottom:12px">${esc(a.propertyNote || 'All rooms listed below are included in your booking.')}</p>
+    <div style="overflow:auto;border:1px solid var(--line);border-radius:12px;margin-bottom:14px">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr style="background:var(--cream-2);text-align:left">
+          <th style="padding:8px">Room</th><th style="padding:8px">Type</th><th style="padding:8px;text-align:center">Qty</th><th style="padding:8px;text-align:center">Capacity</th>
+        </tr></thead>
+        <tbody>${lines}</tbody>
+      </table>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="font-size:14px;font-weight:700;color:var(--teal)">৳${Number(a.pricePerNight||0).toLocaleString()} <span style="font-weight:500;color:var(--ink-soft)">/ night (whole)</span></div>
+      <button class="btn btn-primary" type="button" id="whole-prop-ok">Got it — continue</button>
+    </div>
+  </div>`;
+  m.classList.add('open');
+  m.onclick = e => { if (e.target === m) m.classList.remove('open'); };
+  $('.close-modal', m).onclick = () => m.classList.remove('open');
+  $('#whole-prop-ok', m).onclick = () => m.classList.remove('open');
+}
+
+function updateRoomConfigUI() {
+  // Room UI is popup-based; only sync hidden inputs from bookState
+  const sInput = $('#single-count');
+  const dInput = $('#double-count');
+  if (sInput) sInput.value = String(Math.max(0, Number(bookState.singleCount) || 0));
+  if (dInput) dInput.value = String(Math.max(0, Number(bookState.doubleCount) || 0));
+  const box = $('#room-config');
+  if (box) box.style.display = 'none';
+}
+
+function showRoomSelectionPopup(a) {
+  let m = $('#room-select-modal');
+  if (!m) {
+    m = document.createElement('div');
+    m.id = 'room-select-modal';
+    m.className = 'modal-backdrop';
+    document.body.append(m);
+  }
+  const single = roomOfType(a, 'single');
+  const dbl = roomOfType(a, 'double');
+  const sMax = single ? Math.max(0, Number(single.quantity) || 0) : 0;
+  const dMax = dbl ? Math.max(0, Number(dbl.quantity) || 0) : 0;
+  let sQty = Math.min(sMax, Math.max(0, Number(bookState.singleCount) || 0));
+  let dQty = Math.min(dMax, Math.max(0, Number(bookState.doubleCount) || 0));
+  if (sQty + dQty < 1) {
+    if (dMax > 0) dQty = 1;
+    else if (sMax > 0) sQty = 1;
+  }
+
+  const singleCard = single ? `
+    <div style="background:var(--cream-2);border:1px solid var(--line);border-radius:12px;padding:14px">
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px">Single room</div>
+      <div style="font-size:12px;color:var(--ink-soft);margin-bottom:10px">${sMax} available · sleeps ${single.capacity || 1}</div>
+      <div style="display:flex;align-items:center;gap:8px;justify-content:center">
+        <button type="button" class="btn btn-ghost btn-sm" id="pop-single-minus" style="min-width:36px">−</button>
+        <input id="pop-single-count" class="form-input" type="number" min="0" max="${sMax}" value="${sQty}" style="text-align:center;width:64px">
+        <button type="button" class="btn btn-ghost btn-sm" id="pop-single-plus" style="min-width:36px">+</button>
+      </div>
+      <div style="font-size:13px;color:var(--teal);font-weight:700;margin-top:10px;text-align:center">৳${Number(single.pricePerNight||0).toLocaleString()} / night</div>
+    </div>` : '';
+
+  const doubleCard = dbl ? `
+    <div style="background:var(--cream-2);border:1px solid var(--line);border-radius:12px;padding:14px">
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px">Double room</div>
+      <div style="font-size:12px;color:var(--ink-soft);margin-bottom:10px">${dMax} available · sleeps ${dbl.capacity || 2}</div>
+      <div style="display:flex;align-items:center;gap:8px;justify-content:center">
+        <button type="button" class="btn btn-ghost btn-sm" id="pop-double-minus" style="min-width:36px">−</button>
+        <input id="pop-double-count" class="form-input" type="number" min="0" max="${dMax}" value="${dQty}" style="text-align:center;width:64px">
+        <button type="button" class="btn btn-ghost btn-sm" id="pop-double-plus" style="min-width:36px">+</button>
+      </div>
+      <div style="font-size:13px;color:var(--teal);font-weight:700;margin-top:10px;text-align:center">৳${Number(dbl.pricePerNight||0).toLocaleString()} / night</div>
+    </div>` : '';
+
+  m.innerHTML = `<div class="auth-modal" style="max-width:480px">
+    <div class="modal-head"><div><div class="eyebrow" style="color:var(--teal)">Room selection</div><h3>${esc(a.name||'Stay')}</h3></div>
+      <button class="close-modal" type="button" aria-label="Close">×</button></div>
+    <p style="font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:14px">
+      Choose how many Single and Double rooms you need. You can combine both types (limited by availability).
+    </p>
+    <div style="display:grid;grid-template-columns:${single && dbl ? '1fr 1fr' : '1fr'};gap:12px;margin-bottom:16px">
+      ${singleCard}${doubleCard}
+    </div>
+    <div id="pop-room-summary" style="font-size:13px;font-weight:600;margin-bottom:14px;text-align:center;color:var(--ink)"></div>
+    <button class="btn btn-primary" type="button" id="pop-room-ok" style="width:100%">Confirm rooms</button>
+  </div>`;
+  m.classList.add('open');
+  m.onclick = e => { if (e.target === m) m.classList.remove('open'); };
+  $('.close-modal', m).onclick = () => m.classList.remove('open');
+
+  const syncSummary = () => {
+    const s = Math.min(sMax, Math.max(0, Number($('#pop-single-count', m)?.value || 0)));
+    const d = Math.min(dMax, Math.max(0, Number($('#pop-double-count', m)?.value || 0)));
+    const parts = [];
+    if (s) parts.push(s + '× Single');
+    if (d) parts.push(d + '× Double');
+    const el = $('#pop-room-summary', m);
+    if (el) el.textContent = parts.length ? parts.join(' + ') : 'Select at least one room';
+    return { s, d };
+  };
+
+  const clampPop = (type) => {
+    const input = $(type === 'single' ? '#pop-single-count' : '#pop-double-count', m);
+    if (!input) return;
+    const max = type === 'single' ? sMax : dMax;
+    let v = Math.max(0, Math.min(max, Number(input.value) || 0));
+    input.value = String(v);
+    syncSummary();
+  };
+
+  const bindStep = (minusId, plusId, inputId, type) => {
+    const minus = $(minusId, m), plus = $(plusId, m), input = $(inputId, m);
+    if (minus) minus.onclick = () => { if (!input) return; input.value = String(Math.max(0, (Number(input.value) || 0) - 1)); clampPop(type); };
+    if (plus) plus.onclick = () => {
+      if (!input) return;
+      const max = type === 'single' ? sMax : dMax;
+      input.value = String(Math.min(max, (Number(input.value) || 0) + 1));
+      clampPop(type);
+    };
+    if (input) input.oninput = () => clampPop(type);
+  };
+  bindStep('#pop-single-minus', '#pop-single-plus', '#pop-single-count', 'single');
+  bindStep('#pop-double-minus', '#pop-double-plus', '#pop-double-count', 'double');
+  syncSummary();
+
+  $('#pop-room-ok', m).onclick = () => {
+    const { s, d } = syncSummary();
+    if (s + d < 1) { toast('Select at least one room.'); return; }
+    bookState.singleCount = s;
+    bookState.doubleCount = d;
+    updateRoomConfigUI();
+    refreshBookingSummary();
+    m.classList.remove('open');
+    toast((s ? s + ' single' : '') + (s && d ? ' + ' : '') + (d ? d + ' double' : '') + ' selected');
+  };
+}
+
+function refreshBookingSummary() {
+  const plan = getPlanTrip();
+  const totals = calcBookingTotals();
+  const a = bookState.selected;
+
+  const title = $('#book-list-title');
+  const sub = $('#book-list-sub');
+  if (title) title.textContent = `Stays in ${plan.destination}`;
+  if (sub) {
+    const dateBit = plan.start && plan.end ? `${fmtDate(plan.start)} – ${fmtDate(plan.end)}` : 'Set dates in Plan a Trip';
+    sub.textContent = `${dateBit} · ${plan.travelers} guest${plan.travelers>1?'s':''} · ${totals.nights} night${totals.nights>1?'s':''}`;
+  }
+
+  const setRow = (id, left, right) => {
+    const el = $(id);
+    if (!el) return;
+    el.innerHTML = `<span>${left}</span><b>${right}</b>`;
+  };
+
+  const prop = $('#sum-property');
+  if (prop) prop.innerHTML = a ? `<span>${esc(a.name)}</span><b>${totals.mode === 'whole-property' ? 'Entire property' : 'Per room'}</b>` : '<span>Select a stay</span>';
+
+  setRow('#sum-destination', 'Destination', esc(plan.destination));
+  setRow('#sum-checkin', 'Check-in', fmtDate(plan.start));
+  setRow('#sum-checkout', 'Check-out', fmtDate(plan.end));
+  setRow('#sum-guests', 'Guests', `${plan.travelers} adult${plan.travelers>1?'s':''}`);
+  setRow('#sum-rooms', 'Rooms', totals.roomLabel);
+  setRow('#sum-nights', `৳${totals.roomNightPrice.toLocaleString()} × ${totals.nights} night${totals.nights>1?'s':''}`, `৳${totals.subtotal.toLocaleString()}`);
+  setRow('#sum-fee', 'Service fee (4.5%)', `৳${totals.fee.toLocaleString()}`);
+  const totalEl = $('#sum-total');
+  if (totalEl) totalEl.textContent = '৳' + totals.total.toLocaleString();
+}
+
+function ensureRooms(a) {
+  if (!a) return a;
+  if (Array.isArray(a.rooms) && a.rooms.length) return a;
+  // If API record has no room inventory, synthesize single+double so selection always works
+  const base = Number(a.pricePerNight) || 1500;
+  return {
+    ...a,
+    bookingMode: a.bookingMode || 'per-room',
+    rooms: [
+      { name: 'Single Room', type: 'single', capacity: 1, quantity: 4, pricePerNight: Math.round(base * 0.7) },
+      { name: 'Double Room', type: 'double', capacity: 2, quantity: 6, pricePerNight: base }
+    ],
+    totalRooms: a.totalRooms || 10
+  };
+}
+
+function selectHotel(c) {
+  if (!c) return;
+  const id = c.dataset.id || '';
+  const all = window.__accommodations || [];
+  let a = all.find(x => String(x._id) === String(id)) || {
+    _id: id,
+    name: c.dataset.name,
+    pricePerNight: Number(c.dataset.price) || 0,
+    bookingMode: c.dataset.mode || 'per-room',
+    rooms: [],
+    amenities: []
+  };
+  a = ensureRooms(a);
+  bookState.selected = a;
+
+  $$('.hotel-card').forEach(x => {
+    x.classList.remove('sel');
+    const foot = $('.hotel-foot', x);
+    const pill = foot?.querySelector('.pill');
+    if (pill) pill.outerHTML = '<button class="btn btn-ghost btn-sm" type="button">Select</button>';
+  });
+  c.classList.add('sel');
+  const foot = $('.hotel-foot', c), btn = foot?.querySelector('button');
+  if (btn) btn.outerHTML = '<span class="pill pill-teal">Selected</span>';
+
+  // Default room counts after select
+  const single = roomOfType(a, 'single');
+  const dbl = roomOfType(a, 'double');
+  bookState.singleCount = 0;
+  bookState.doubleCount = dbl ? 1 : (single ? 1 : 0);
+  const sInput = $('#single-count');
+  const dInput = $('#double-count');
+  if (sInput) sInput.value = String(bookState.singleCount);
+  if (dInput) dInput.value = String(bookState.doubleCount);
+
+  if ((a.bookingMode || 'per-room') === 'whole-property') {
+    showWholePropertyPopup(a);
+  } else {
+    showRoomSelectionPopup(a);
+  }
+
+  updateRoomConfigUI();
+  refreshBookingSummary();
+  store.set('dv_selected_hotel', { id: a._id, name: a.name, price: a.pricePerNight, mode: a.bookingMode });
+}
+
+function bindHotelCards() {
+  $$('.hotel-card').forEach(c => {
+    c.onclick = (e) => {
+      e.preventDefault();
+      selectHotel(c);
+    };
+  });
+}
+
+const DEMO_ACCOMMODATIONS = [
+  {
+    _id: 'demo-whole', name: 'Megh Machang Cottage', location: 'Konglak Hill Road, Sajek',
+    bookingMode: 'whole-property', pricePerNight: 8500, totalRooms: 3, maxGuests: 8, rating: 4.9,
+    amenities: ['Cloud view', 'Bonfire', 'Breakfast incl.'],
+    propertyNote: 'Whole cottage must be booked. Includes 2 double rooms + 1 family suite.',
+    rooms: [
+      { name: 'Cloud Double', type: 'double', capacity: 2, quantity: 2, pricePerNight: 2400 },
+      { name: 'Family Suite', type: 'family', capacity: 4, quantity: 1, pricePerNight: 3800 }
+    ]
+  },
+  {
+    _id: 'demo-resort', name: 'Ruilui Resort', location: 'Ruilui Para, Sajek',
+    bookingMode: 'per-room', pricePerNight: 1800, totalRooms: 10, maxGuests: 20, rating: 4.6,
+    amenities: ['Balcony', 'Parking', 'Restaurant'],
+    propertyNote: 'Book single and/or double rooms as needed.',
+    rooms: [
+      { name: 'Single Room', type: 'single', capacity: 1, quantity: 4, pricePerNight: 1200 },
+      { name: 'Double Room', type: 'double', capacity: 2, quantity: 6, pricePerNight: 1800 }
+    ]
+  },
+  {
+    _id: 'demo-home', name: 'Sajek Heights Homestay', location: 'Konglak, Sajek',
+    bookingMode: 'per-room', pricePerNight: 1300, totalRooms: 5, rating: 4.4,
+    amenities: ['Family run', 'Local meals'],
+    rooms: [
+      { name: 'Single', type: 'single', capacity: 1, quantity: 2, pricePerNight: 900 },
+      { name: 'Double', type: 'double', capacity: 2, quantity: 3, pricePerNight: 1300 }
+    ]
+  }
+];
+
+async function loadAccommodations() {
+  const list = $('#hotel-list');
+  if (!list) return;
+  const cfg = $('#room-config');
+  if (cfg) cfg.style.display = 'none';
+  bookState.selected = null;
+  bookState.singleCount = 0;
+  bookState.doubleCount = 1;
+  refreshBookingSummary();
+  try {
+    const data = await apiRequest('/accommodations');
+    let items = (data.accommodations || []).map(ensureRooms);
+    if (!items.length) items = DEMO_ACCOMMODATIONS;
+    window.__accommodations = items;
+    list.innerHTML = items.map(a => hotelCardHTML(a, false)).join('');
+    bindHotelCards();
+    initBookingControls();
+  } catch (err) {
+    console.warn(err);
+    window.__accommodations = DEMO_ACCOMMODATIONS;
+    list.innerHTML = DEMO_ACCOMMODATIONS.map(a => hotelCardHTML(a, false)).join('');
+    bindHotelCards();
+    initBookingControls();
+    toast('Showing demo stays (backend offline)');
+  }
+}
+
+function clampRoomInput(type) {
+  const a = bookState.selected;
+  if (!a) return;
+  const room = roomOfType(a, type);
+  const max = room ? (room.quantity || 0) : 0;
+  const input = $(type === 'single' ? '#single-count' : '#double-count');
+  if (!input) return;
+  let v = Math.max(0, Math.min(max, Number(input.value) || 0));
+  // ensure at least 1 room total
+  const other = type === 'single' ? Number($('#double-count')?.value || 0) : Number($('#single-count')?.value || 0);
+  if (v + other < 1 && max > 0) v = 1;
+  input.value = v;
+  if (type === 'single') bookState.singleCount = v;
+  else bookState.doubleCount = v;
+  refreshBookingSummary();
+}
+
+function initBookingControls() {
+  const bindStepper = (minusId, plusId, inputId, type) => {
+    const minus = $(minusId), plus = $(plusId), input = $(inputId);
+    if (minus) minus.onclick = () => {
+      if (!input) return;
+      input.value = Math.max(0, (Number(input.value) || 0) - 1);
+      clampRoomInput(type);
+    };
+    if (plus) plus.onclick = () => {
+      if (!input) return;
+      input.value = (Number(input.value) || 0) + 1;
+      clampRoomInput(type);
+    };
+    if (input) input.oninput = () => clampRoomInput(type);
+  };
+  bindStepper('#single-minus', '#single-plus', '#single-count', 'single');
+  bindStepper('#double-minus', '#double-plus', '#double-count', 'double');
+
+  $$('#pay-methods .pay-chip').forEach(chip => {
+    chip.onclick = () => {
+      $$('#pay-methods .pay-chip').forEach(c => c.classList.remove('on'));
+      chip.classList.add('on');
+      bookState.paymentMethod = chip.dataset.pay;
+    };
+  });
+  const firstPay = $('#pay-methods .pay-chip');
+  if (firstPay) { firstPay.classList.add('on'); bookState.paymentMethod = firstPay.dataset.pay; }
+
+  const btn = $('#confirm-book-btn');
+  if (btn) btn.onclick = openPaymentModal;
+}
+
+function openPaymentModal() {
+  if (!user()) { modal('login'); return toast('Please log in before booking.'); }
+  const plan = getPlanTrip();
+  if (!plan.start || !plan.end) {
+    toast('Please set start & end dates in Plan a Trip first.');
+    return tab('t3');
+  }
+  if (!bookState.selected || !bookState.selected._id) {
+    return toast('Select a hotel or resort first.');
+  }
+  const totals = calcBookingTotals();
+  if (totals.mode === 'per-room' && totals.roomsBooked < 1) {
+    return toast('Select at least one Single or Double room.');
+  }
+  const method = bookState.paymentMethod || 'bKash';
+
+  let m = $('#payment-modal');
+  if (!m) { m = document.createElement('div'); m.id = 'payment-modal'; m.className = 'modal-backdrop'; document.body.append(m); }
+  m.innerHTML = `<div class="auth-modal" style="max-width:460px">
+    <div class="modal-head"><div><div class="eyebrow" style="color:var(--teal)">Dummy payment</div><h3>Verify ${esc(method)}</h3></div><button class="close-modal" type="button">×</button></div>
+    <p style="font-size:13px;color:var(--ink-soft);line-height:1.55;margin-bottom:14px">
+      Pay <b>৳${totals.total.toLocaleString()}</b> via <b>${esc(method)}</b> for <b>${esc(bookState.selected.name)}</b>
+      (${esc(totals.roomLabel)}, ${totals.nights} night${totals.nights>1?'s':''}).
+      Then enter the transaction ID to verify.
+    </p>
+    <div style="font-size:12px;background:var(--teal-light);padding:10px 12px;border-radius:10px;margin-bottom:14px;line-height:1.5">
+      <b>Demo codes:</b> BKASH123456 · NAGAD987654 · CARD456789<br>
+      (IDs ending with 000 will fail verification)
+    </div>
+    <div class="form-group"><label>Transaction ID</label>
+      <input class="form-input" id="txn-input" placeholder="${method === 'Card' ? 'CARD456789' : method.toUpperCase()+'123456'}" autocomplete="off">
+    </div>
+    <div id="pay-error" style="display:none;font-size:12.5px;color:var(--brick);font-weight:600;margin-bottom:10px"></div>
+    <button class="btn btn-primary" type="button" id="verify-pay-btn" style="width:100%">Verify &amp; Confirm Booking</button>
+  </div>`;
+  m.classList.add('open');
+  m.onclick = e => { if (e.target === m) m.classList.remove('open'); };
+  $('.close-modal', m).onclick = () => m.classList.remove('open');
+
+  $('#verify-pay-btn', m).onclick = async () => {
+    const txn = ($('#txn-input', m)?.value || '').trim();
+    const err = $('#pay-error', m);
+    const showErr = msg => { err.style.display = 'block'; err.textContent = msg; };
+    if (txn.length < 6) return showErr('Enter a valid transaction ID (at least 6 characters).');
+
+    const vBtn = $('#verify-pay-btn', m);
+    const label = vBtn.textContent;
+    vBtn.disabled = true; vBtn.textContent = 'Verifying…';
+    try {
+      let verified = false;
+      let receipt = null;
+      try {
+        const v = await apiRequest('/bookings/verify-payment', {
+          method: 'POST',
+          body: JSON.stringify({ method, transactionId: txn, amount: totals.total })
+        });
+        verified = !!v.verified;
+        if (!verified) return showErr(v.message || 'Verification failed');
+        receipt = v.receipt;
+      } catch (e) {
+        if (txn.toUpperCase().endsWith('000')) return showErr('Payment not found (demo). Try BKASH123456.');
+        verified = true;
+        receipt = { method, transactionId: txn.toUpperCase(), reference: 'DV-LOCAL' };
+      }
+
+      vBtn.textContent = 'Creating booking…';
+      const isDemoId = String(bookState.selected._id).startsWith('demo');
+      if (isDemoId) {
+        m.classList.remove('open');
+        toast(`Payment verified (${receipt.reference || txn}). Demo booking confirmed for ${bookState.selected.name}.`);
+        store.set('dv_last_booking', {
+          name: bookState.selected.name, total: totals.total, method, txn: txn.toUpperCase(),
+          checkIn: plan.start, checkOut: plan.end, rooms: totals.roomLabel
+        });
+        return;
+      }
+
+      const data = await apiRequest('/bookings', {
+        method: 'POST',
+        body: JSON.stringify({
+          accommodationId: bookState.selected._id,
+          checkIn: plan.start,
+          checkOut: plan.end,
+          guests: plan.travelers,
+          roomType: totals.mode === 'whole-property' ? 'whole' : (totals.doubleCount ? 'double' : 'single'),
+          roomsBooked: totals.roomsBooked,
+          singleCount: totals.singleCount,
+          doubleCount: totals.doubleCount,
+          bookingWhole: totals.mode === 'whole-property',
+          paymentMethod: method,
+          transactionId: txn
+        })
+      });
+      m.classList.remove('open');
+      toast(`Payment verified · Booking ${String(data.booking._id).slice(-6).toUpperCase()} confirmed!`);
+      if (typeof loadMyBookings === 'function') loadMyBookings();
+    } catch (err2) {
+      showErr(err2.message);
+    } finally {
+      vBtn.disabled = false; vBtn.textContent = label;
+    }
+  };
+}
+
+// init on load
+initBookingControls();
+initBookingControls();
+
+
+/* ===== Provider Dashboard — services & booking requests from the database ===== */
+function bindProviderAddButtons(){
+  ['#add-service-btn-top','#add-service-link','#add-service-link-2'].forEach(sel=>{
+    const btn=$(sel);
+    if(!btn||btn.dataset.bound==='1')return;
+    btn.dataset.bound='1';
+    btn.onclick=()=>{
+      if(!user()||user().role!=='provider')return toast('Log in as a provider to add a service.');
+      addServiceModal();
+    };
+  });
+}
+
+async function initProviderDashboard(){
+  const root=$('#t6');
+  if(!root)return;
+  bindDashNav(root);
+  bindProviderAddButtons();
+  const u=user();
+  const servicesBody=$('[data-services-body]',root);
+  const bookingsBody=$('[data-provider-bookings-body]',root);
+  const overviewBookings=$('[data-provider-overview-bookings]',root);
+
+  if(u){
+    const pn=$('#prov-profile-name'),pe=$('#prov-profile-email'),pr=$('#prov-profile-role');
+    if(pn)pn.value=u.name||'';
+    if(pe)pe.value=u.email||'';
+    if(pr)pr.value=u.role||'provider';
+    $$('[data-user-name]',root).forEach(el=>{el.textContent=u.name||'Provider';});
+    $$('[data-user-initial]',root).forEach(el=>{el.textContent=(u.name||'P').charAt(0).toUpperCase();});
+  }
+
+  if(!u||u.role!=='provider'){
+    if(servicesBody)servicesBody.innerHTML='<tr><td colspan="6" style="color:var(--ink-soft);text-align:center;padding:18px 0">Log in as a provider to manage services.</td></tr>';
+    if(bookingsBody)bookingsBody.innerHTML='<tr><td colspan="5" style="color:var(--ink-soft);text-align:center;padding:18px 0">Log in as a provider to see booking requests.</td></tr>';
+    $$('[data-provider-stat]',root).forEach(el=>{el.textContent=(el.dataset.providerStat||'').includes('earnings')?'৳0':'0';});
+    return;
+  }
+
+  let services=[];
+  try{
+    const data=await apiRequest('/accommodations/mine');
+    services=data.accommodations||[];
+    if(servicesBody){
+      servicesBody.innerHTML=services.length
+        ?services.map(s=>{
+          const mode=s.bookingMode==='whole-property'?'Whole property':'Per room';
+          return `<tr data-acc-id="${s._id}">
+            <td>${esc(s.name)}</td>
+            <td>${esc(s.destination?.name||'—')}</td>
+            <td>${mode}</td>
+            <td class="mono">৳${Number(s.pricePerNight||0).toLocaleString()}</td>
+            <td><span class="status ${s.status==='Verified'?'ok':'pend'}">${esc(s.status||'Pending review')}</span></td>
+            <td style="white-space:nowrap">
+              <button class="btn btn-outline btn-sm provider-edit-btn" data-id="${s._id}" style="padding:5px 10px;margin-right:4px">Edit</button>
+              <button class="btn btn-ghost btn-sm provider-delete-btn" data-id="${s._id}" style="padding:5px 10px;color:var(--brick)">Delete</button>
+            </td>
+          </tr>`;
+        }).join('')
+        :'<tr><td colspan="6" style="color:var(--ink-soft);text-align:center;padding:18px 0">You haven\'t added any services yet. Click “+ Add service”.</td></tr>';
+      $$('.provider-edit-btn',servicesBody).forEach(btn=>{
+        btn.onclick=()=>{
+          const full=services.find(s=>String(s._id)===String(btn.dataset.id));
+          editServiceModal(full||{_id:btn.dataset.id});
+        };
+      });
+      $$('.provider-delete-btn',servicesBody).forEach(btn=>btn.onclick=async()=>{
+        if(!confirm('Delete this service? This cannot be undone.'))return;
+        try{
+          await apiRequest('/accommodations/'+btn.dataset.id,{method:'DELETE'});
+          toast('Service deleted.');
+          initProviderDashboard();
+        }catch(e){toast(e.message)}
+      });
+    }
+    const svcStat=$('[data-provider-stat="services"]',root);
+    if(svcStat)svcStat.textContent=String(services.length);
+  }catch(err){console.warn('Could not load services:',err.message)}
+
+  try{
+    const data=await apiRequest('/bookings/provider');
+    const bookings=data.bookings||[];
+    const renderBookingRows=(list,withActions)=>{
+      if(!list.length)return '<tr><td colspan="5" style="color:var(--ink-soft);text-align:center;padding:18px 0">No booking requests yet.</td></tr>';
+      return list.map(b=>{
+        const dates=b.checkIn?new Date(b.checkIn).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'—';
+        const action=withActions && b.status==='Pending'
+          ?`<button class="btn btn-primary btn-sm provider-confirm-btn" data-booking-id="${b._id}" data-status="Confirmed" style="padding:6px 10px;margin-right:4px">Confirm</button><button class="btn btn-ghost btn-sm provider-confirm-btn" data-booking-id="${b._id}" data-status="Cancelled" style="padding:6px 10px;color:var(--brick)">Decline</button>`
+          :`<span class="status ${b.status==='Confirmed'?'ok':b.status==='Pending'?'pend':'no'}">${esc(b.status)}</span>`;
+        return `<tr><td>${esc(b.traveler?.name||'Traveler')}</td><td>${esc(b.accommodation?.name||'—')}</td><td>${dates}</td><td class="mono">৳${(b.totalAmount||0).toLocaleString()}</td><td>${action}</td></tr>`;
+      }).join('');
+    };
+    if(bookingsBody){
+      bookingsBody.innerHTML=renderBookingRows(bookings,true);
+      $$('.provider-confirm-btn',bookingsBody).forEach(btn=>btn.onclick=async()=>{
+        const st=btn.dataset.status||'Confirmed';
+        const label=btn.textContent;
+        btn.disabled=true;btn.textContent='…';
+        try{
+          await apiRequest('/bookings/'+btn.dataset.bookingId+'/status',{method:'PATCH',body:JSON.stringify({status:st})});
+          toast(st==='Confirmed'?'Booking confirmed.':'Booking declined.');
+          initProviderDashboard();
+        }catch(err){toast(err.message);btn.disabled=false;btn.textContent=label;}
+      });
+    }
+    if(overviewBookings){
+      overviewBookings.innerHTML=bookings.slice(0,5).map(b=>{
+        const cls=b.status==='Confirmed'?'ok':b.status==='Pending'?'pend':'no';
+        return `<tr><td>${esc(b.traveler?.name||'Traveler')}</td><td>${esc(b.accommodation?.name||'—')}</td><td class="mono">৳${(b.totalAmount||0).toLocaleString()}</td><td><span class="status ${cls}">${esc(b.status)}</span></td></tr>`;
+      }).join('')||'<tr><td colspan="4" style="color:var(--ink-soft);text-align:center;padding:14px 0">No recent bookings.</td></tr>';
+    }
+    const confirmed=bookings.filter(b=>b.status==='Confirmed');
+    const pending=bookings.filter(b=>b.status==='Pending');
+    const earnings=confirmed.reduce((s,b)=>s+(b.totalAmount||0),0);
+    const setStat=(key,val)=>{$$(`[data-provider-stat="${key}"]`,root).forEach(el=>{el.textContent=val;});};
+    setStat('earnings','৳'+earnings.toLocaleString());
+    setStat('earnings-detail','৳'+earnings.toLocaleString());
+    setStat('bookings',String(bookings.length));
+    setStat('confirmed-count',String(confirmed.length));
+    setStat('pending',String(pending.length));
+
+    const barsEl=$('[data-provider-earnings-bars]',root);
+    if(barsEl){
+      const months={};
+      confirmed.forEach(b=>{
+        const d=b.checkIn?new Date(b.checkIn):new Date();
+        const key=d.toLocaleString('en',{month:'short'});
+        months[key]=(months[key]||0)+(b.totalAmount||0);
+      });
+      const entries=Object.entries(months);
+      if(entries.length){
+        const max=Math.max(...entries.map(([,v])=>v),1);
+        barsEl.innerHTML=entries.map(([m,v])=>`<div class="b" style="height:${Math.max(12,Math.round(v/max*100))}%"><span>${m}</span></div>`).join('');
+      } else {
+        barsEl.innerHTML='<div class="b" style="height:20%"><span>No data</span></div>';
+      }
+    }
+  }catch(err){console.warn('Could not load provider bookings:',err.message)}
+}
+
+function roomFieldsHTML(rooms){
+  const s=(rooms||[]).find(r=>r.type==='single')||{};
+  const d=(rooms||[]).find(r=>r.type==='double')||{};
+  return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div class="form-group" style="margin:0"><label>Single rooms (qty)</label><input class="form-input" name="singleQty" type="number" min="0" value="${s.quantity??2}"></div>
+      <div class="form-group" style="margin:0"><label>Single price / night</label><input class="form-input" name="singlePrice" type="number" min="0" value="${s.pricePerNight??1000}"></div>
+      <div class="form-group" style="margin:0"><label>Double rooms (qty)</label><input class="form-input" name="doubleQty" type="number" min="0" value="${d.quantity??4}"></div>
+      <div class="form-group" style="margin:0"><label>Double price / night</label><input class="form-input" name="doublePrice" type="number" min="0" value="${d.pricePerNight??1800}"></div>
+    </div>`;
+}
+
+function buildRoomsFromForm(fd){
+  const rooms=[];
+  const sq=Number(fd.get('singleQty')||0), sp=Number(fd.get('singlePrice')||0);
+  const dq=Number(fd.get('doubleQty')||0), dp=Number(fd.get('doublePrice')||0);
+  if(sq>0) rooms.push({name:'Single Room',type:'single',capacity:1,quantity:sq,pricePerNight:sp});
+  if(dq>0) rooms.push({name:'Double Room',type:'double',capacity:2,quantity:dq,pricePerNight:dp});
+  return rooms;
+}
+
+function editServiceModal(data){
+  const id=data._id||data.id;
+  let m=$('#edit-service-modal');if(!m){m=document.createElement('div');m.id='edit-service-modal';m.className='modal-backdrop';document.body.append(m)}
+  const mode=data.bookingMode||'per-room';
+  m.innerHTML=`<div class="auth-modal" style="max-width:520px"><div class="modal-head"><div><div class="eyebrow" style="color:var(--teal)">Provider</div><h3>Edit service</h3></div><button class="close-modal" type="button">×</button></div>
+    <form id="edit-service-form">
+      <div class="form-group"><label>Service name</label><input class="form-input" name="name" required value="${esc(data.name||'')}"></div>
+      <div class="form-group"><label>Location / address</label><input class="form-input" name="location" value="${esc(data.location||'')}"></div>
+      <div class="form-group"><label>Base / whole-property price per night (৳)</label><input class="form-input" name="pricePerNight" type="number" min="0" required value="${data.pricePerNight??data.price??''}"></div>
+      <div class="form-group"><label>Booking mode</label>
+        <select class="form-input" name="bookingMode">
+          <option value="per-room" ${mode==='per-room'?'selected':''}>Per room (guest picks single/double)</option>
+          <option value="whole-property" ${mode==='whole-property'?'selected':''}>Whole property only</option>
+        </select>
+      </div>
+      <div style="font-size:12.5px;font-weight:700;margin:8px 0 6px">Room inventory</div>
+      ${roomFieldsHTML(data.rooms)}
+      <div class="form-group"><label>Note for guests (optional)</label><input class="form-input" name="propertyNote" value="${esc(data.propertyNote||'')}"></div>
+      <div id="edit-service-error" style="display:none;font-size:12.5px;color:var(--brick);font-weight:600;margin-bottom:10px"></div>
+      <button class="btn btn-primary" style="width:100%" type="submit">Save changes</button>
+    </form></div>`;
+  m.classList.add('open');
+  m.onclick=e=>{if(e.target===m)m.classList.remove('open')};
+  $('.close-modal',m).onclick=()=>m.classList.remove('open');
+  $('#edit-service-form',m).onsubmit=async e=>{
+    e.preventDefault();
+    const fd=new FormData(e.target);
+    const rooms=buildRoomsFromForm(fd);
+    const body={
+      name:fd.get('name'),
+      location:fd.get('location'),
+      pricePerNight:Number(fd.get('pricePerNight')),
+      bookingMode:fd.get('bookingMode'),
+      rooms,
+      totalRooms:rooms.reduce((s,r)=>s+r.quantity,0)||1,
+      propertyNote:fd.get('propertyNote')||''
+    };
+    const errEl=$('#edit-service-error',m);
+    try{
+      await apiRequest('/accommodations/'+id,{method:'PATCH',body:JSON.stringify(body)});
+      m.classList.remove('open');
+      toast('Service updated.');
+      initProviderDashboard();
+    }catch(err){
+      errEl.style.display='block';errEl.textContent=err.message;
+    }
+  };
+}
+
+function addServiceModal(){
+  let m=$('#service-modal');
+  if(!m){m=document.createElement('div');m.id='service-modal';m.className='modal-backdrop';document.body.append(m)}
+  m.innerHTML=`<div class="auth-modal" style="max-width:520px"><div class="modal-head"><div><div class="eyebrow" style="color:var(--teal)">Provider</div><h3>Add a new service</h3></div><button class="close-modal" type="button">×</button></div>
+    <form id="service-form" novalidate>
+      <div class="form-group"><label>Service name</label><input class="form-input" name="name" required placeholder="e.g. Ruilui Resort"></div>
+      <div class="form-group"><label>Destination</label><select class="form-input" name="destination" id="service-destination-select" required>
+        <option value="">Loading destinations…</option>
+      </select></div>
+      <div class="form-group"><label>Location / address</label><input class="form-input" name="location" required placeholder="Village / road"></div>
+      <div class="form-group"><label>Base / whole-property price per night (৳)</label><input class="form-input" type="number" min="0" name="pricePerNight" required placeholder="1800"></div>
+      <div class="form-group"><label>Booking mode</label>
+        <select class="form-input" name="bookingMode">
+          <option value="per-room" selected>Per room (guest picks single/double)</option>
+          <option value="whole-property">Whole property only</option>
+        </select>
+      </div>
+      <div style="font-size:12.5px;font-weight:700;margin:8px 0 6px">Room inventory</div>
+      ${roomFieldsHTML([])}
+      <div class="form-group"><label>Note for guests (optional)</label><input class="form-input" name="propertyNote" placeholder="e.g. Combine single + double as needed"></div>
+      <div id="service-error" style="display:none;font-size:12.5px;color:var(--brick);font-weight:600;margin-bottom:10px"></div>
+      <button class="btn btn-primary" style="width:100%" type="submit" id="service-submit-btn">Add service</button>
+    </form></div>`;
+  m.classList.add('open');
+  m.onclick=e=>{if(e.target===m)m.classList.remove('open')};
+  const closeBtn=$('.close-modal',m);
+  if(closeBtn) closeBtn.onclick=()=>m.classList.remove('open');
+
+  const sel=$('#service-destination-select',m);
+  const fillDestinations=async()=>{
+    if(!sel)return;
+    try{
+      const d=await apiRequest('/destinations');
+      const list=d.destinations||[];
+      if(list.length){
+        sel.innerHTML='<option value="">Select destination</option>'+list.map(x=>`<option value="${x._id}">${esc(x.name)}</option>`).join('');
+      }else{
+        sel.innerHTML='<option value="">No destinations — run seed</option>';
+      }
+    }catch(err){
+      // Offline fallback: use exploreState or FALLBACK names without real ids — still allow name entry note
+      const names=(typeof exploreState!=='undefined'&&exploreState.all&&exploreState.all.length)
+        ?[...new Set(exploreState.all.map(x=>x.name))]
+        :(typeof FALLBACK_DESTINATIONS!=='undefined'?FALLBACK_DESTINATIONS.map(x=>x.name):['Sajek Valley']);
+      sel.innerHTML='<option value="">Backend offline — cannot save yet</option>'+
+        names.slice(0,20).map(n=>`<option value="" disabled>${esc(n)}</option>`).join('');
+      console.warn('Destinations load failed',err.message);
+    }
+  };
+  fillDestinations();
+
+  const showErr=msg=>{
+    const el=$('#service-error',m);
+    if(el){el.textContent=msg;el.style.display='block';}
+    else toast(msg);
+  };
+
+  const form=$('#service-form',m);
+  if(!form){console.error('service-form missing');return;}
+
+  form.onsubmit=async e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    const fd=new FormData(form);
+    const name=String(fd.get('name')||'').trim();
+    const destination=String(fd.get('destination')||'').trim();
+    const location=String(fd.get('location')||'').trim();
+    const pricePerNight=Number(fd.get('pricePerNight'));
+    const bookingMode=fd.get('bookingMode')||'per-room';
+    const propertyNote=String(fd.get('propertyNote')||'');
+    const rooms=buildRoomsFromForm(fd);
+
+    if(!name) return showErr('Please enter a service name.');
+    if(!destination) return showErr('Please select a destination. (Is the backend running?)');
+    if(!location) return showErr('Please enter a location / address.');
+    if(Number.isNaN(pricePerNight)||pricePerNight<0) return showErr('Enter a valid price per night.');
+    if(!rooms.length && bookingMode==='per-room') return showErr('Add at least one room (quantity > 0).');
+
+    const btn=$('#service-submit-btn',m)||$('button[type="submit"]',form);
+    const label=btn?btn.textContent:'Add service';
+    if(btn){btn.disabled=true;btn.textContent='Adding…';}
+    try{
+      await apiRequest('/accommodations',{method:'POST',body:JSON.stringify({
+        name,
+        destination,
+        location,
+        pricePerNight,
+        bookingMode,
+        rooms,
+        totalRooms:rooms.reduce((s,r)=>s+(r.quantity||0),0)||1,
+        propertyNote,
+        amenities:[]
+      })});
+      m.classList.remove('open');
+      toast('Service added successfully.');
+      if(typeof initProviderDashboard==='function') initProviderDashboard();
+    }catch(err){
+      showErr(err.message||'Could not add service.');
+    }finally{
+      if(btn){btn.disabled=false;btn.textContent=label;}
+    }
+  };
+}
+
+
+function initTravelerDashboard(){
+  bindDashNav($("#t5"));
+  const root=$('#t5');
+  if(!root)return;
+  const u=user()||{name:'Traveler',email:'Not signed in'};
+  const name=u.name||'Traveler';
+  const initials=name.trim().split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase()||'T';
+
+  $$('[data-user-name]',root).forEach(el=>el.textContent=name);
+  $$('[data-welcome-name]',root).forEach(el=>el.textContent=name);
+  $$('[data-user-initial], [data-profile-initial]',root).forEach(el=>el.textContent=initials);
+  $$('[data-profile-name]',root).forEach(el=>el.textContent=name);
+  $$('[data-profile-email]',root).forEach(el=>el.textContent=u.email||'Not signed in');
+
+  const pf=$('#profile-form',root);
+  if(pf){
+    pf.querySelector('[data-profile-input="name"]').value=u.name||'';
+    pf.querySelector('[data-profile-input="email"]').value=u.email||'';
+    pf.querySelector('[data-profile-input="phone"]').value=u.phone||'';
+    pf.onsubmit=async e=>{
+      e.preventDefault();
+      const current=user();
+      if(!current)return toast('Please log in to update your profile.');
+      const newName=pf.querySelector('[data-profile-input="name"]').value.trim();
+      const newPhone=pf.querySelector('[data-profile-input="phone"]').value.trim();
+      if(!newName)return toast('Full name cannot be empty.');
+      const saveBtn=$('button[type="submit"]',pf),originalLabel=saveBtn.textContent;
+      saveBtn.disabled=true;saveBtn.textContent='Saving…';
+      try{
+        const data=await apiRequest('/auth/profile',{method:'PUT',body:JSON.stringify({name:newName,phone:newPhone})});
+        store.set('dv_user',data.user);
+        toast('Profile updated successfully.');
+        initTravelerDashboard();
+      }catch(err){
+        toast(err.message);
+      }finally{
+        saveBtn.disabled=false;saveBtn.textContent=originalLabel;
+      }
+    };
+  }
+
+  // Places visited / reviews written don't have a backing model yet - kept as demo placeholders.
+  $('[data-stat="visited"]',root).textContent=String(store.get('dv_places_visited',9));
+  $('[data-stat="reviews"]',root).textContent=String(store.get('dv_reviews_written',6));
+  if(user())loadMyBookings(); // real upcoming/spent stats + bookings table come from the database
+
+  const panels=$$('[data-dash-panel]',root);
+  const activate=(section)=>{
+    $$('.dnav',root).forEach(n=>n.classList.toggle('on',n.dataset.dashSection===section));
+    panels.forEach(p=>p.style.display=p.dataset.dashPanel===section?'block':'none');
+    const select=$('[data-mobile-dash]',root);
+    if(select)select.value=section;
+  };
+  $$('.dnav',root).forEach(n=>n.onclick=()=>activate(n.dataset.dashSection));
+  const mobile=$('[data-mobile-dash]',root);
+  if(mobile)mobile.onchange=()=>activate(mobile.value);
+
+  $$('[data-plan-trip]',root).forEach(b=>b.onclick=()=>tab('t3'));
+  $$('[data-open-planner]',root).forEach(b=>b.onclick=()=>tab('t3'));
+  $$('[data-go-bookings], .dash-view-all',root).forEach(b=>b.onclick=()=>activate('bookings'));
+}
+
+
+
+/* ===== Wire all real-site interactions ===== */
+function bindGlobalActions(){
+  // Register as Provider CTA (home)
+  const regBtn=$('#register-provider-cta');
+  if(regBtn)regBtn.onclick=()=>{
+    const u=user();
+    if(u&&u.role==='provider'){toast('You are already registered as a provider.');return tab('t6');}
+    if(u&&u.role==='traveler'){toast('You are logged in as a traveler. Create a provider account with a different email.');}
+    modal('signup',{role:'provider'});
+  };
+
+  // Hero / process CTAs that say Plan or Explore
+  $$('button, a').forEach(b=>{
+    const t=(b.textContent||'').trim();
+    if(b.dataset.bound)return;
+    if(t==='Start planning'||t==='Plan your trip'||t.includes('Start planning')){
+      b.dataset.bound='1';b.onclick=()=>tab('t3');
+    }
+    if(t==='Explore destinations'||t.includes('Explore destination')){
+      b.dataset.bound='1';b.onclick=()=>tab('t2');
+    }
+  });
+
+  // Footer about/support/contact
+  $$('[data-go-about]').forEach(a=>a.onclick=e=>{e.preventDefault();toast('Desh Vromon — tourism platform for Bangladesh. Contact: support@deshvromon.com');});
+  $$('[data-go-support]').forEach(a=>a.onclick=e=>{e.preventDefault();toast('Support: support@deshvromon.com · We reply within 24 hours.');});
+  $$('[data-go-contact]').forEach(a=>a.onclick=e=>{e.preventDefault();toast('Email: hello@deshvromon.com');});
+
+
+
+  // Planner style chips
+  $$('.style-chip, #t3 .chip').forEach(chip=>{
+    if(chip.closest('.planner-form')||chip.classList.contains('style-chip')||chip.closest('#t3')){
+      chip.onclick=()=>{
+        const parent=chip.parentElement;
+        if(parent)$$('.style-chip, .chip',parent).forEach(c=>c.classList.remove('on'));
+        chip.classList.add('on');
+      };
+    }
+  });
+
+  // Header provider link if any
+  $$('.header-provider-link').forEach(a=>a.onclick=()=>{
+    if(user()&&user().role==='provider')tab('t6');
+    else modal('signup',{role:'provider'});
+  });
+
+  // Hero search card → go to Explore or Plan
+  const searchBtn=$('.search-btn');
+  if(searchBtn)searchBtn.onclick=()=>{tab('t2');toast('Showing destinations for your search.');};
+
+  // Home "View all destinations"
+  $$('#t1 button').forEach(b=>{
+    const t=(b.textContent||'').trim();
+    if(t.includes('View all destination'))b.onclick=()=>tab('t2');
+    if(t==='Explore')b.onclick=()=>tab('t2');
+    if(t.includes('Start planning')||t.includes('Plan a trip'))b.onclick=()=>tab('t3');
+    if(t.includes('Book')&&!t.includes('Booking'))b.onclick=()=>tab('t4');
+  });
+
+  // Dest cards on home → explore
+  $$('#t1 .dest-card').forEach(card=>{
+    card.style.cursor='pointer';
+    card.onclick=e=>{
+      if(e.target.closest('button')){tab('t2');return;}
+      tab('t2');
+    };
+  });
+
+  // Season wheel tags → filter explore with matching season selected
+  $$('.season-tag').forEach(tag=>{
+    tag.style.cursor='pointer';
+    tag.onclick=()=>{
+      $$('.season-tag').forEach(t=>t.classList.remove('on'));
+      tag.classList.add('on');
+      const map={'শীত':'Winter','গ্রীষ্ম':'Summer','বর্ষা':'Monsoon','শরৎ':'Autumn','হেমন্ত':'Late Autumn','বসন্ত':'Spring'};
+      const s=map[tag.textContent.trim()]||'All';
+      exploreState.season=s;
+      $$('#season-chips .chip').forEach(c=>c.classList.toggle('on', c.dataset.season===s));
+      // update callout
+      const call=$('.season-callout');
+      if(call)call.innerHTML='<b>Selected season:</b> '+s+' — explore destinations best matched to this time of year.';
+      tab('t2');
+      loadDestinations({season:s});
+      toast('Explore filtered for '+s);
+    };
+  });
+
+  // Process section buttons
+  $$('#t1 .step button, #t1 .steps button').forEach(b=>{
+    b.onclick=()=>tab('t3');
+  });
+}
+
+
+
+
+const footProv=document.getElementById('footer-providers-link');
+if(footProv){
+  footProv.style.cursor='pointer';
+  footProv.onclick=e=>{
+    e.preventDefault();
+    const u=user();
+    if(u&&u.role==='provider') tab('t6');
+    else if(u&&u.role==='traveler') toast('Use a provider account to open the provider workspace.');
+    else modal('signup',{role:'provider'});
+  };
+}
+
+/* ===== Mobile navigation menu ===== */
+function closeMobileNav(){
+  const links=$('.nav-links'),btn=$('#menuToggle');
+  if(!links||!btn)return;
+  links.classList.remove('mobile-open');
+  btn.setAttribute('aria-expanded','false');
+}
+function initMobileNav(){
+  const links=$('.nav-links'),btn=$('#menuToggle');
+  if(!links||!btn)return;
+  btn.onclick=()=>{
+    const open=links.classList.toggle('mobile-open');
+    btn.setAttribute('aria-expanded',String(open));
+  };
+  document.addEventListener('click',e=>{
+    if(!links.classList.contains('mobile-open'))return;
+    if(e.target.closest('.nav-links')||e.target.closest('#menuToggle'))return;
+    closeMobileNav();
+  });
+}
+initMobileNav();
+
+authUI();bindGlobalActions();initExploreFilters();initPlanner();initTravelerDashboard();
+loadDestinations();
+tab('t1');
+verifySession().then(()=>{
+  authUI();
+  bindGlobalActions();
+  const u=user();
+  if(u&&u.role==='provider'){initProviderDashboard();tab('t6');}
+  else if(u&&u.role==='traveler'){initTravelerDashboard();if(typeof loadMyTripPlans==='function')loadMyTripPlans();if(typeof loadMyBookings==='function')loadMyBookings();}
+});
+</script>
+
+</body>
+</html>

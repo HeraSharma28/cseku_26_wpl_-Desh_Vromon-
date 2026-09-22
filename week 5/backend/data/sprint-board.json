@@ -1,0 +1,60 @@
+{
+  "project": "Desh Vromon",
+  "sprints": [
+    {
+      "id": "sprint-1",
+      "name": "Week 3–4 Development Sprint 1",
+      "start": "2026-08-18",
+      "end": "2026-08-31",
+      "capacityPoints": 40,
+      "goal": "Core modules: auth, navigation, basic UI, unit tests"
+    },
+    {
+      "id": "sprint-2",
+      "name": "Week 5–6 Development Sprint 2",
+      "start": "2026-09-01",
+      "end": "2026-09-14",
+      "capacityPoints": 45,
+      "goal": "CRUD, forms, API integration, dashboards"
+    },
+    {
+      "id": "sprint-3",
+      "name": "Polish & Launch Sprint",
+      "start": "2026-09-15",
+      "end": "2026-09-28",
+      "capacityPoints": 40,
+      "goal": "Reviews, media, admin, deployment readiness"
+    }
+  ],
+  "tasks": [
+    {"id": "T01", "title": "Auth signup/login JWT", "points": 5, "status": "done", "sprintId": "sprint-1", "area": "backend"},
+    {"id": "T02", "title": "Role-based middleware", "points": 3, "status": "done", "sprintId": "sprint-1", "area": "backend"},
+    {"id": "T03", "title": "Destination/Accommodation models", "points": 5, "status": "done", "sprintId": "sprint-1", "area": "backend"},
+    {"id": "T04", "title": "Responsive multi-page UI shell", "points": 8, "status": "done", "sprintId": "sprint-1", "area": "frontend"},
+    {"id": "T05", "title": "Unit tests auth/routes/middleware", "points": 5, "status": "done", "sprintId": "sprint-1", "area": "tests"},
+    {"id": "T06", "title": "Seed data + README", "points": 3, "status": "done", "sprintId": "sprint-1", "area": "devops"},
+    {"id": "T07", "title": "Booking create + traveler list", "points": 5, "status": "done", "sprintId": "sprint-1", "area": "backend"},
+    {"id": "T08", "title": "Trip plan save API (basic)", "points": 3, "status": "done", "sprintId": "sprint-1", "area": "backend"},
+
+    {"id": "T09", "title": "Accommodation full CRUD", "points": 5, "status": "done", "sprintId": "sprint-2", "area": "backend"},
+    {"id": "T10", "title": "Service PATCH/DELETE", "points": 3, "status": "done", "sprintId": "sprint-2", "area": "backend"},
+    {"id": "T11", "title": "Traveler cancel booking", "points": 3, "status": "done", "sprintId": "sprint-2", "area": "backend"},
+    {"id": "T12", "title": "Provider edit/delete UI", "points": 5, "status": "done", "sprintId": "sprint-2", "area": "frontend"},
+    {"id": "T13", "title": "Traveler dashboard trip plans", "points": 5, "status": "done", "sprintId": "sprint-2", "area": "frontend"},
+    {"id": "T14", "title": "CRUD unit tests", "points": 5, "status": "done", "sprintId": "sprint-2", "area": "tests"},
+    {"id": "T15", "title": "Explore 60 destinations + filters", "points": 8, "status": "done", "sprintId": "sprint-2", "area": "frontend"},
+    {"id": "T16", "title": "Plan-a-trip date-driven itinerary", "points": 5, "status": "done", "sprintId": "sprint-2", "area": "frontend"},
+    {"id": "T17", "title": "Password show/hide + provider register CTA", "points": 3, "status": "done", "sprintId": "sprint-2", "area": "frontend"},
+    {"id": "T18", "title": "Sprint velocity monitor API", "points": 3, "status": "done", "sprintId": "sprint-2", "area": "backend"},
+
+    {"id": "T19", "title": "Image upload for accommodations", "points": 8, "status": "todo", "sprintId": "sprint-3", "area": "backend", "priority": "high"},
+    {"id": "T20", "title": "Review & rating model + UI", "points": 8, "status": "todo", "sprintId": "sprint-3", "area": "full-stack", "priority": "high"},
+    {"id": "T21", "title": "Admin verify provider services", "points": 5, "status": "todo", "sprintId": "sprint-3", "area": "backend", "priority": "medium"},
+    {"id": "T22", "title": "Payment gateway stub", "points": 5, "status": "todo", "sprintId": "sprint-3", "area": "backend", "priority": "medium"},
+    {"id": "T23", "title": "E2E smoke tests (Playwright)", "points": 5, "status": "todo", "sprintId": "sprint-3", "area": "tests", "priority": "medium"},
+    {"id": "T24", "title": "Deploy backend + static frontend", "points": 5, "status": "todo", "sprintId": "sprint-3", "area": "devops", "priority": "high"},
+    {"id": "T25", "title": "Email notifications on booking status", "points": 5, "status": "todo", "sprintId": null, "area": "backend", "priority": "low"},
+    {"id": "T26", "title": "Map view for destinations", "points": 8, "status": "todo", "sprintId": null, "area": "frontend", "priority": "low"},
+    {"id": "T27", "title": "Multi-language (BN/EN) toggle", "points": 5, "status": "todo", "sprintId": null, "area": "frontend", "priority": "low"}
+  ]
+}
